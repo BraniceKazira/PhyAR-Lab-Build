@@ -135,6 +135,8 @@ Unity compiles the APK and installs it directly to the connected phone.
 ### Figma prototype
 
 **https://www.figma.com/design/Jk4aRmpj9aP39VUoBcgCwm**
+Video Description Link: https://canva.link/05hwlikyd3wnnnv
+
 
 All 11 screens designed across 3 Figma pages:
 - Page 1: Design System + S01 Splash + S02 Home
@@ -253,5 +255,3 @@ Teacher session log export: long-press the app logo on the home screen for 3 sec
 
 **Developer and researcher:** Branice Kazira
 **Programme:** BSc. Software Engineering — AR/VR Specialisation
-**Institution:** African Leadership University
-**Academic year:** 2025–2026
