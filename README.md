@@ -1,8 +1,7 @@
 # PhyAR Lab
 
-> **Offline mobile augmented reality physics learning for KCSE Form 2–4 students in Nairobi, Kenya.**
+> **Offline mobile augmented reality physics learning for students*. *
 
-![PhyAR Lab Logo — atom orbital mark in electric copper with cyan AR arcs]
 
 ---
 
