@@ -1,0 +1,95 @@
+{
+  "topicID": "em_induction",
+  "questions": [
+    {
+      "id": "em_q01",
+      "questionText": "A transformer has 200 primary turns and 1,000 secondary turns. If the primary voltage is 12V, what is the secondary voltage?",
+      "options": ["2.4 V", "120 V", "60 V", "480 V"],
+      "correctOptionIndex": 2,
+      "hint": "Turns ratio: Ns/Np = Vs/Vp",
+      "explanation": "Vs = Vp \u00d7 (Ns/Np) = 12 \u00d7 (1000/200) = 12 \u00d7 5 = 60 V.",
+      "reference": "KLB Physics Book 4, Ch.5 p.142"
+    },
+    {
+      "id": "em_q02",
+      "questionText": "Which law states that the induced EMF in a circuit is proportional to the rate of change of magnetic flux linkage?",
+      "options": ["Lenz's Law", "Faraday's Law", "Ampere's Law", "Fleming's Rule"],
+      "correctOptionIndex": 1,
+      "hint": "This law gives the magnitude of the induced EMF.",
+      "explanation": "Faraday's law: EMF = -N\u0394\u03a6/\u0394t. It quantifies how much EMF is induced based on how fast the flux changes.",
+      "reference": "KLB Physics Book 4, Ch.5 p.128"
+    },
+    {
+      "id": "em_q03",
+      "questionText": "A coil of 50 turns experiences a change in flux of 0.04 Wb in 0.2 seconds. What is the magnitude of the induced EMF?",
+      "options": ["1 V", "10 V", "0.04 V", "2 V"],
+      "correctOptionIndex": 1,
+      "hint": "EMF = N \u00d7 \u0394\u03a6 / \u0394t",
+      "explanation": "EMF = 50 \u00d7 (0.04 / 0.2) = 50 \u00d7 0.2 = 10 V.",
+      "reference": "KLB Physics Book 4, Ch.5 p.129"
+    },
+    {
+      "id": "em_q04",
+      "questionText": "Lenz's law is a consequence of which fundamental principle?",
+      "options": ["Newton's second law", "Conservation of momentum", "Conservation of energy", "Ohm's law"],
+      "correctOptionIndex": 2,
+      "hint": "The induced current opposes change — what would happen if it aided the change instead?",
+      "explanation": "If the induced current aided the change causing it, the current would increase indefinitely — creating energy from nothing. Opposing the change enforces conservation of energy.",
+      "reference": "KLB Physics Book 4, Ch.5 p.132"
+    },
+    {
+      "id": "em_q05",
+      "questionText": "In an AC generator, what is the function of slip rings?",
+      "options": ["To convert AC to DC", "To allow continuous rotation while maintaining electrical contact", "To increase the output voltage", "To reduce energy losses"],
+      "correctOptionIndex": 1,
+      "hint": "Think about how the rotating coil connects to the external circuit.",
+      "explanation": "Slip rings are two metal rings attached to the coil ends. The brushes press against them and maintain contact while the coil rotates — allowing AC to flow out continuously.",
+      "reference": "KLB Physics Book 4, Ch.5 p.137"
+    },
+    {
+      "id": "em_q06",
+      "questionText": "Which of the following is a step-down transformer?",
+      "options": ["Np=100, Ns=500", "Np=500, Ns=100", "Np=100, Ns=100", "Np=50, Ns=250"],
+      "correctOptionIndex": 1,
+      "hint": "A step-down transformer has MORE primary turns than secondary turns.",
+      "explanation": "With Np=500 and Ns=100, Vs = Vp \u00d7 (100/500) = 0.2 \u00d7 Vp. The output is one-fifth of the input — stepped down.",
+      "reference": "KLB Physics Book 4, Ch.5 p.141"
+    },
+    {
+      "id": "em_q07",
+      "questionText": "Fleming's Right Hand Rule is used to determine the direction of:",
+      "options": ["Current in a motor", "Force on a conductor in a magnetic field", "Induced current in a generator", "Magnetic field of a solenoid"],
+      "correctOptionIndex": 2,
+      "hint": "Left hand = motor (force). Right hand = generator (induced current).",
+      "explanation": "Fleming's Right Hand Rule applies to generators: the thumb points in the direction of motion, the index finger in the direction of the field, and the middle finger gives the direction of induced current.",
+      "reference": "KLB Physics Book 4, Ch.5 p.134"
+    },
+    {
+      "id": "em_q08",
+      "questionText": "What is the SI unit of magnetic flux?",
+      "options": ["Tesla (T)", "Weber (Wb)", "Henry (H)", "Gauss (G)"],
+      "correctOptionIndex": 1,
+      "hint": "Named after the German physicist Wilhelm Weber.",
+      "explanation": "Magnetic flux (\u03a6) is measured in Webers (Wb). 1 Wb = 1 T\u00b7m\u00b2. Tesla is the unit of magnetic flux density (B), not flux.",
+      "reference": "KLB Physics Book 4, Ch.5 p.127"
+    },
+    {
+      "id": "em_q09",
+      "questionText": "If the primary voltage of a transformer is 240V and the turns ratio Np:Ns is 1:10, what is the secondary voltage?",
+      "options": ["24 V", "2400 V", "240 V", "2.4 V"],
+      "correctOptionIndex": 1,
+      "hint": "Vs = Vp \u00d7 (Ns/Np)",
+      "explanation": "Np:Ns = 1:10 means Ns/Np = 10. So Vs = 240 \u00d7 10 = 2400 V. This is a step-up transformer.",
+      "reference": "KLB Physics Book 4, Ch.5 p.142"
+    },
+    {
+      "id": "em_q10",
+      "questionText": "Which factor does NOT affect the magnitude of the induced EMF in a coil?",
+      "options": ["Number of turns in the coil", "Rate of change of magnetic flux", "Colour of the wire", "Strength of the magnetic field"],
+      "correctOptionIndex": 2,
+      "hint": "EMF = N \u00d7 \u0394\u03a6/\u0394t — look at what variables appear in this formula.",
+      "explanation": "The colour of the wire has no effect on EMF. EMF depends on N (turns), \u0394\u03a6 (flux change, determined by field strength), and \u0394t (time).",
+      "reference": "KLB Physics Book 4, Ch.5 p.128"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "topicID": "em_induction",
+  "heading": "What is electromagnetic induction?",
+  "definition": "Electromagnetic induction is the process of generating an electromotive force (EMF) and consequently an electric current in a closed circuit by changing the magnetic flux passing through it.",
+  "concepts": [
+    {
+      "title": "Faraday's Law",
+      "description": "The induced EMF is proportional to the rate of change of magnetic flux linkage.",
+      "iconGlyph": "F"
+    },
+    {
+      "title": "Lenz's Law",
+      "description": "Direction of induced current opposes the change that caused it.",
+      "iconGlyph": "L"
+    },
+    {
+      "title": "Fleming's Right Hand Rule",
+      "description": "Determines direction of induced current in a moving conductor.",
+      "iconGlyph": "R"
+    }
+  ],
+  "formula": "EMF = -N \u00d7 (\u0394\u03a6 / \u0394t)",
+  "variableDefs": "EMF = electromotive force (Volts)\nN = number of turns in the coil\n\u0394\u03a6 = change in magnetic flux (Webers)\n\u0394t = time interval (seconds)",
+  "source": "KLB Physics Book 4, Chapter 5"
+}

@@ -1,0 +1,54 @@
+{
+  "topics": [
+    {
+      "id": "waves_i",
+      "displayName": "Waves I",
+      "form": "Form 2",
+      "chapter": "Chapter 3",
+      "status": "shell",
+      "accentColorHex": "#00D9FF",
+      "description": "Pulses, transverse & longitudinal waves",
+      "subTopicCount": 4
+    },
+    {
+      "id": "electromagnetism",
+      "displayName": "Electromagnetism",
+      "form": "Form 2",
+      "chapter": "Chapter 8",
+      "status": "shell",
+      "accentColorHex": "#B87333",
+      "description": "Oersted effect, motor effect, Fleming's LHR",
+      "subTopicCount": 4
+    },
+    {
+      "id": "current_electricity",
+      "displayName": "Current Electricity II",
+      "form": "Form 3",
+      "chapter": "Chapter 4",
+      "status": "full",
+      "accentColorHex": "#2EC4B6",
+      "description": "Ohm's law, series & parallel, EMF",
+      "subTopicCount": 5
+    },
+    {
+      "id": "waves_ii",
+      "displayName": "Waves II",
+      "form": "Form 3",
+      "chapter": "Chapter 6",
+      "status": "full",
+      "accentColorHex": "#00D9FF",
+      "description": "Reflection, refraction, diffraction, interference",
+      "subTopicCount": 5
+    },
+    {
+      "id": "em_induction",
+      "displayName": "Electromagnetic Induction",
+      "form": "Form 4",
+      "chapter": "Chapter 5",
+      "status": "full",
+      "accentColorHex": "#B87333",
+      "description": "Faraday, Lenz, generators, transformers",
+      "subTopicCount": 5
+    }
+  ]
+}

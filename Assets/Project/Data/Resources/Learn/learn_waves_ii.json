@@ -1,0 +1,25 @@
+{
+  "topicID": "waves_ii",
+  "heading": "What are the properties of waves?",
+  "definition": "Waves are disturbances that transfer energy from one point to another without transferring matter. All waves can be reflected, refracted, diffracted, and can interfere with each other.",
+  "concepts": [
+    {
+      "title": "Reflection",
+      "description": "Waves bounce off a surface. Angle of incidence equals angle of reflection.",
+      "iconGlyph": "R"
+    },
+    {
+      "title": "Refraction",
+      "description": "Waves change speed and direction when moving between media of different densities.",
+      "iconGlyph": "N"
+    },
+    {
+      "title": "Diffraction & Interference",
+      "description": "Waves spread around obstacles and can combine constructively or destructively.",
+      "iconGlyph": "D"
+    }
+  ],
+  "formula": "v = f\u03bb  |  T = 1/f  |  n = c/v",
+  "variableDefs": "v = wave speed (m/s)\nf = frequency (Hz)\n\u03bb = wavelength (m)\nT = period (s)\nn = refractive index",
+  "source": "KLB Physics Book 3, Chapter 6"
+}

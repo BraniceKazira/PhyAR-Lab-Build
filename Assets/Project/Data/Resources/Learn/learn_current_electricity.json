@@ -1,0 +1,25 @@
+{
+  "topicID": "current_electricity",
+  "heading": "What is current electricity?",
+  "definition": "Current electricity is the continuous flow of electric charge through a conductor. It requires a closed circuit and a source of electromotive force (EMF) such as a battery to maintain the flow of charge.",
+  "concepts": [
+    {
+      "title": "Ohm's Law",
+      "description": "The current through a conductor is directly proportional to the voltage across it (at constant temperature).",
+      "iconGlyph": "V"
+    },
+    {
+      "title": "Series & Parallel Circuits",
+      "description": "Components in series share the same current; components in parallel share the same voltage.",
+      "iconGlyph": "R"
+    },
+    {
+      "title": "EMF & Internal Resistance",
+      "description": "A real battery has internal resistance that reduces the terminal voltage under load.",
+      "iconGlyph": "E"
+    }
+  ],
+  "formula": "V = IR  |  P = IV  |  V = EMF - Ir",
+  "variableDefs": "V = potential difference (Volts)\nI = current (Amperes)\nR = resistance (Ohms)\nEMF = electromotive force (Volts)\nr = internal resistance (\u03a9)",
+  "source": "KLB Physics Book 3, Chapter 4"
+}

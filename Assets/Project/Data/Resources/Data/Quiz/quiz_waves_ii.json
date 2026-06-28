@@ -1,0 +1,95 @@
+{
+  "topicID": "waves_ii",
+  "questions": [
+    {
+      "id": "wv_q01",
+      "questionText": "A wave has a frequency of 50 Hz and wavelength of 4 m. What is its speed?",
+      "options": ["12.5 m/s", "0.08 m/s", "200 m/s", "54 m/s"],
+      "correctOptionIndex": 2,
+      "hint": "v = f\u03bb",
+      "explanation": "v = f\u03bb = 50 \u00d7 4 = 200 m/s.",
+      "reference": "KLB Physics Book 3, Ch.6 p.112"
+    },
+    {
+      "id": "wv_q02",
+      "questionText": "The frequency of a wave is 25 Hz. What is its period?",
+      "options": ["25 s", "0.04 s", "4 s", "0.25 s"],
+      "correctOptionIndex": 1,
+      "hint": "T = 1/f",
+      "explanation": "T = 1/f = 1/25 = 0.04 s.",
+      "reference": "KLB Physics Book 3, Ch.6 p.110"
+    },
+    {
+      "id": "wv_q03",
+      "questionText": "Which of the following is NOT a property shared by all types of waves?",
+      "options": ["Reflection", "Diffraction", "Requiring a medium to travel", "Refraction"],
+      "correctOptionIndex": 2,
+      "hint": "Think about electromagnetic waves — what do they travel through in space?",
+      "explanation": "Electromagnetic waves (e.g. light, radio waves) can travel through a vacuum — they need no medium. All mechanical waves need a medium, but not all waves do.",
+      "reference": "KLB Physics Book 3, Ch.6 p.108"
+    },
+    {
+      "id": "wv_q04",
+      "questionText": "When a water wave moves from deep to shallow water, what happens to its wavelength?",
+      "options": ["Increases", "Stays the same", "Decreases", "Becomes zero"],
+      "correctOptionIndex": 2,
+      "hint": "Speed decreases in shallow water. Frequency stays the same. Use v = f\u03bb.",
+      "explanation": "In shallow water, speed decreases. Since frequency is constant (v = f\u03bb), wavelength must also decrease proportionally.",
+      "reference": "KLB Physics Book 3, Ch.6 p.118"
+    },
+    {
+      "id": "wv_q05",
+      "questionText": "The law of reflection states that the angle of incidence is:",
+      "options": ["Greater than the angle of reflection", "Less than the angle of reflection", "Equal to the angle of reflection", "Complementary to the angle of reflection"],
+      "correctOptionIndex": 2,
+      "hint": "Both angles are measured from the normal to the surface.",
+      "explanation": "The angle of incidence always equals the angle of reflection. Both are measured from the normal (perpendicular) to the reflecting surface.",
+      "reference": "KLB Physics Book 3, Ch.6 p.114"
+    },
+    {
+      "id": "wv_q06",
+      "questionText": "Diffraction of waves is most pronounced when:",
+      "options": ["The gap is much larger than the wavelength", "The gap is comparable to or smaller than the wavelength", "The wave frequency is very high", "The wave amplitude is large"],
+      "correctOptionIndex": 1,
+      "hint": "Compare the size of the gap with the size of one wave cycle.",
+      "explanation": "When the gap size \u2248 wavelength, diffraction is maximum and waves spread significantly. If the gap is much larger, waves pass through with little spreading.",
+      "reference": "KLB Physics Book 3, Ch.6 p.121"
+    },
+    {
+      "id": "wv_q07",
+      "questionText": "Constructive interference occurs when two waves meet:",
+      "options": ["Exactly out of phase (half wavelength path difference)", "Exactly in phase (whole wavelength path difference)", "At right angles to each other", "With very different amplitudes"],
+      "correctOptionIndex": 1,
+      "hint": "Constructive means they add up — they must be in step with each other.",
+      "explanation": "When two waves are in phase (path difference = 0, \u03bb, 2\u03bb...), their crests align and amplitudes add — producing maximum constructive interference.",
+      "reference": "KLB Physics Book 3, Ch.6 p.124"
+    },
+    {
+      "id": "wv_q08",
+      "questionText": "Which statement correctly describes sound and light waves?",
+      "options": ["Both are transverse waves", "Sound is transverse, light is longitudinal", "Both are longitudinal waves", "Sound is longitudinal, light is transverse"],
+      "correctOptionIndex": 3,
+      "hint": "Can light travel through a vacuum? Can sound?",
+      "explanation": "Sound is a mechanical longitudinal wave (particles vibrate along the direction of travel). Light is an electromagnetic transverse wave (oscillations perpendicular to travel direction).",
+      "reference": "KLB Physics Book 3, Ch.6 p.108"
+    },
+    {
+      "id": "wv_q09",
+      "questionText": "The speed of light in glass is 2\u00d710\u2078 m/s. What is the refractive index of glass? (c = 3\u00d710\u2078 m/s)",
+      "options": ["0.67", "6\u00d710\u00b9\u2076", "1.5", "1.0"],
+      "correctOptionIndex": 2,
+      "hint": "n = c / v",
+      "explanation": "n = c/v = (3\u00d710\u2078) / (2\u00d710\u2078) = 1.5. A refractive index greater than 1 means light slows down in the medium.",
+      "reference": "KLB Physics Book 3, Ch.6 p.119"
+    },
+    {
+      "id": "wv_q10",
+      "questionText": "Standing (stationary) waves are formed by:",
+      "options": ["A single wave reflecting off a hard barrier", "Two waves of different frequencies travelling together", "Two identical waves travelling in opposite directions", "Diffraction of waves through a narrow slit"],
+      "correctOptionIndex": 2,
+      "hint": "Think about what happens when two identical waves collide head-on.",
+      "explanation": "When two waves of equal frequency and amplitude travel in opposite directions, their superposition creates a standing wave with fixed nodes and antinodes.",
+      "reference": "KLB Physics Book 3, Ch.6 p.126"
+    }
+  ]
+}

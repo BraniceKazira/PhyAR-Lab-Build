@@ -1,0 +1,65 @@
+{
+  "topicID": "current_electricity",
+  "subTopics": [
+    {
+      "id": "ohms_law",
+      "shortName": "Ohm's Law",
+      "fullName": "4.1 Ohm's Law",
+      "cards": [
+        {"id":"ce_o_001","question":"State Ohm's law.","answer":"The current through a metallic conductor is directly proportional to the potential difference across it, provided the temperature remains constant."},
+        {"id":"ce_o_002","question":"Write the formula for Ohm's law.","answer":"V = IR, where V is voltage (V), I is current (A), and R is resistance (\u03a9)."},
+        {"id":"ce_o_003","question":"What is resistance?","answer":"The opposition to the flow of electric current in a conductor. It is measured in Ohms (\u03a9)."},
+        {"id":"ce_o_004","question":"A 6\u03a9 resistor has 3A flowing through it. What is the voltage across it?","answer":"V = IR = 3 \u00d7 6 = 18 V."},
+        {"id":"ce_o_005","question":"What is an ohmic conductor?","answer":"A conductor that obeys Ohm's law — its resistance remains constant as voltage and current change (e.g. a resistor at constant temperature)."}
+      ]
+    },
+    {
+      "id": "series",
+      "shortName": "Series",
+      "fullName": "4.2 Series Circuits",
+      "cards": [
+        {"id":"ce_s_001","question":"How is total resistance calculated in a series circuit?","answer":"R_total = R1 + R2 + R3 + ... (resistances simply add up)."},
+        {"id":"ce_s_002","question":"What quantity is the same for all components in a series circuit?","answer":"Current — the same current flows through every component."},
+        {"id":"ce_s_003","question":"How is voltage shared in a series circuit?","answer":"Voltage is shared proportionally to resistance. Components with higher resistance have a larger share of the total voltage."},
+        {"id":"ce_s_004","question":"Three resistors of 2\u03a9, 4\u03a9, and 6\u03a9 are in series. What is the total resistance?","answer":"R = 2 + 4 + 6 = 12 \u03a9."},
+        {"id":"ce_s_005","question":"What is a potential divider?","answer":"Two resistors in series across a voltage source. The voltage across each resistor is proportional to its resistance — used to obtain a fraction of the supply voltage."}
+      ]
+    },
+    {
+      "id": "parallel",
+      "shortName": "Parallel",
+      "fullName": "4.3 Parallel Circuits",
+      "cards": [
+        {"id":"ce_p_001","question":"How is total resistance calculated in a parallel circuit?","answer":"1/R_total = 1/R1 + 1/R2 + 1/R3 + ..."},
+        {"id":"ce_p_002","question":"What quantity is the same for all branches in a parallel circuit?","answer":"Voltage — all branches have the same potential difference across them."},
+        {"id":"ce_p_003","question":"Two resistors of 6\u03a9 and 3\u03a9 are in parallel. Find the combined resistance.","answer":"1/R = 1/6 + 1/3 = 1/6 + 2/6 = 3/6. So R = 2 \u03a9."},
+        {"id":"ce_p_004","question":"Why are household appliances connected in parallel?","answer":"So each appliance receives the full mains voltage and can be switched on/off independently without affecting the others."},
+        {"id":"ce_p_005","question":"In a parallel circuit, how does adding more branches affect total resistance?","answer":"Total resistance decreases — each additional branch provides another path for current, so current flows more easily overall."}
+      ]
+    },
+    {
+      "id": "emf",
+      "shortName": "EMF",
+      "fullName": "4.4 EMF & Internal Resistance",
+      "cards": [
+        {"id":"ce_e_001","question":"What is electromotive force (EMF)?","answer":"The energy per unit charge supplied by a source (battery/generator) to drive charge around a circuit. Measured in Volts."},
+        {"id":"ce_e_002","question":"What is internal resistance?","answer":"The resistance inside a battery itself. It causes some of the battery's EMF to be 'lost' as heat inside the battery."},
+        {"id":"ce_e_003","question":"State the relationship between EMF, terminal voltage, and internal resistance.","answer":"EMF = V_terminal + Ir, or V_terminal = EMF - Ir, where I is current and r is internal resistance."},
+        {"id":"ce_e_004","question":"A battery of EMF 12V and internal resistance 2\u03a9 drives a current of 2A. What is the terminal voltage?","answer":"V = EMF - Ir = 12 - (2 \u00d7 2) = 12 - 4 = 8 V."},
+        {"id":"ce_e_005","question":"What happens to terminal voltage as current drawn increases?","answer":"Terminal voltage decreases — the voltage drop across the internal resistance (Ir) increases, leaving less for the external circuit."}
+      ]
+    },
+    {
+      "id": "power",
+      "shortName": "Power",
+      "fullName": "4.5 Electrical Power & Energy",
+      "cards": [
+        {"id":"ce_pw_001","question":"State the formula for electrical power.","answer":"P = IV = I\u00b2R = V\u00b2/R, where P is power (W), I is current (A), V is voltage (V), R is resistance (\u03a9)."},
+        {"id":"ce_pw_002","question":"What is the SI unit of electrical energy?","answer":"The Joule (J). In practice, the kilowatt-hour (kWh) is used for billing. 1 kWh = 3,600,000 J."},
+        {"id":"ce_pw_003","question":"A 60W bulb operates at 240V. What current does it draw?","answer":"I = P/V = 60/240 = 0.25 A."},
+        {"id":"ce_pw_004","question":"State Joule's law of heating.","answer":"The heat produced in a resistor is directly proportional to I\u00b2, R, and time t. H = I\u00b2Rt."},
+        {"id":"ce_pw_005","question":"A 1000W heater runs for 3 hours. How many kWh does it use?","answer":"Energy = Power \u00d7 time = 1kW \u00d7 3h = 3 kWh."}
+      ]
+    }
+  ]
+}

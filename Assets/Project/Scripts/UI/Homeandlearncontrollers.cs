@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class topics.json : MonoBehaviour
+public class Homeandlearncontrollers : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

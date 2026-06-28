@@ -1,0 +1,65 @@
+{
+  "topicID": "waves_ii",
+  "subTopics": [
+    {
+      "id": "wave_properties",
+      "shortName": "Properties",
+      "fullName": "6.1 Wave Properties",
+      "cards": [
+        {"id":"wv_p_001","question":"State the wave equation.","answer":"v = f\u03bb, where v is wave speed (m/s), f is frequency (Hz), and \u03bb is wavelength (m)."},
+        {"id":"wv_p_002","question":"Define frequency of a wave.","answer":"The number of complete wave cycles passing a fixed point per second. Unit: Hertz (Hz)."},
+        {"id":"wv_p_003","question":"What is the relationship between period (T) and frequency (f)?","answer":"T = 1/f. Period is the time for one complete wave cycle."},
+        {"id":"wv_p_004","question":"A wave has frequency 200 Hz and wavelength 1.5 m. Find its speed.","answer":"v = f\u03bb = 200 \u00d7 1.5 = 300 m/s."},
+        {"id":"wv_p_005","question":"Define amplitude of a wave.","answer":"The maximum displacement of a particle from its rest (equilibrium) position. It determines the energy carried by the wave."}
+      ]
+    },
+    {
+      "id": "reflection",
+      "shortName": "Reflection",
+      "fullName": "6.2 Reflection of Waves",
+      "cards": [
+        {"id":"wv_r_001","question":"State the law of reflection for waves.","answer":"The angle of incidence equals the angle of reflection, both measured from the normal to the reflecting surface."},
+        {"id":"wv_r_002","question":"What properties of a wave remain unchanged during reflection?","answer":"Speed, frequency, and wavelength all remain the same after reflection."},
+        {"id":"wv_r_003","question":"What is a wavefront?","answer":"An imaginary line joining all points of a wave that are in the same phase (e.g. all crests form one wavefront)."},
+        {"id":"wv_r_004","question":"Give one real-life application of wave reflection.","answer":"Radar — radio waves are sent out and their reflections from aircraft are detected to determine position and speed."},
+        {"id":"wv_r_005","question":"What is an echo?","answer":"A reflected sound wave heard after the original sound. The reflecting surface must be at least 17 m away for the echo to be heard distinctly."}
+      ]
+    },
+    {
+      "id": "refraction",
+      "shortName": "Refraction",
+      "fullName": "6.3 Refraction of Waves",
+      "cards": [
+        {"id":"wv_rf_001","question":"Define refraction of waves.","answer":"The change in direction of a wave as it passes from one medium to another due to a change in its speed."},
+        {"id":"wv_rf_002","question":"Why does a wave change direction when refracted?","answer":"Because its speed changes at the boundary between media. The part of the wavefront in the new medium travels at a different speed, bending the wave direction."},
+        {"id":"wv_rf_003","question":"State Snell's law for waves.","answer":"n1 sin\u03b81 = n2 sin\u03b82, where n is the refractive index and \u03b8 is the angle to the normal."},
+        {"id":"wv_rf_004","question":"What happens to the wavelength of a wave during refraction?","answer":"Wavelength changes proportionally to speed. If speed decreases, wavelength decreases. Frequency stays constant."},
+        {"id":"wv_rf_005","question":"The speed of light in glass is 2\u00d710\u2078 m/s. What is the refractive index of glass? (c = 3\u00d710\u2078 m/s)","answer":"n = c/v = (3\u00d710\u2078)/(2\u00d710\u2078) = 1.5."}
+      ]
+    },
+    {
+      "id": "diffraction",
+      "shortName": "Diffraction",
+      "fullName": "6.4 Diffraction of Waves",
+      "cards": [
+        {"id":"wv_d_001","question":"Define diffraction.","answer":"The spreading of waves around obstacles or through openings (gaps). It is most significant when the gap size is comparable to the wavelength."},
+        {"id":"wv_d_002","question":"When is diffraction most pronounced?","answer":"When the width of the gap or obstacle is equal to or smaller than the wavelength of the wave."},
+        {"id":"wv_d_003","question":"What happens to wave speed and frequency during diffraction?","answer":"Both remain unchanged. Only the direction of propagation changes as the wave spreads."},
+        {"id":"wv_d_004","question":"Give two real-life examples of diffraction.","answer":"(1) Sound bending around corners of buildings. (2) Radio waves diffracting over hills and into valleys."},
+        {"id":"wv_d_005","question":"How does increasing the gap width affect the diffraction pattern?","answer":"Less diffraction occurs — the waves pass more straight through with less spreading at the edges."}
+      ]
+    },
+    {
+      "id": "interference",
+      "shortName": "Interference",
+      "fullName": "6.5 Interference of Waves",
+      "cards": [
+        {"id":"wv_i_001","question":"Define interference of waves.","answer":"The combination of two or more waves at the same point in space, resulting in a new wave pattern based on superposition."},
+        {"id":"wv_i_002","question":"State the condition for constructive interference.","answer":"Two waves meet in phase (path difference = n\u03bb, where n = 0,1,2...). Their amplitudes add together, producing a larger resultant."},
+        {"id":"wv_i_003","question":"State the condition for destructive interference.","answer":"Two waves meet exactly out of phase (path difference = (n+\u00bd)\u03bb). Their amplitudes cancel, producing zero or reduced amplitude."},
+        {"id":"wv_i_004","question":"What is a standing (stationary) wave?","answer":"A wave pattern formed by two identical waves travelling in opposite directions. It has fixed nodes (zero displacement) and antinodes (maximum displacement)."},
+        {"id":"wv_i_005","question":"Give one application of wave interference.","answer":"Noise-cancelling headphones — they generate sound waves that destructively interfere with incoming noise."}
+      ]
+    }
+  ]
+}
