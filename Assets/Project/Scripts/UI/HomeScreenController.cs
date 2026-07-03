@@ -2,39 +2,26 @@ using UnityEngine;
 
 public class HomeScreenController : MonoBehaviour
 {
-    [Header("Drag the Content child of your TopicScrollView here")]
-    public Transform topicListContainer;
-
-    [Header("Drag the TopicCard prefab from Assets/_Project/Prefabs/UI/")]
-    public GameObject topicCardPrefab;
-
-    private bool _cardsBuilt = false;
-
     void OnEnable()
     {
-        if (!_cardsBuilt) BuildTopicCards();
-    }
-
-    void BuildTopicCards()
-    {
-        TopicListWrapper data = ModuleLoader.Instance.LoadTopicList();
-        if (data == null || data.topics == null)
+        // Guard against running before AppManagers has initialised
+        if (ModuleLoader.Instance == null)
         {
-            Debug.LogError("[HomeScreenController] Could not load topics.json");
+            Debug.LogWarning("[HomeScreen] ModuleLoader not ready yet — skipping populate.");
             return;
         }
 
-        foreach (Transform child in topicListContainer)
-            Destroy(child.gameObject);
+        TopicCardUI[] cards = GetComponentsInChildren<TopicCardUI>(includeInactive: true);
+        if (cards.Length == 0) return;
 
-        foreach (TopicEntry topic in data.topics)
+        TopicListWrapper data = ModuleLoader.Instance.LoadTopicList();
+        if (data == null) return;
+
+        foreach (TopicCardUI card in cards)
         {
-            GameObject card = Instantiate(topicCardPrefab, topicListContainer);
-            TopicCardUI cardUI = card.GetComponent<TopicCardUI>();
-            if (cardUI != null)
-                cardUI.Populate(topic);
+            if (string.IsNullOrEmpty(card.topicID)) continue;
+            TopicEntry entry = data.topics.Find(t => t.id == card.topicID);
+            if (entry != null) card.Populate(entry);
         }
-
-        _cardsBuilt = true;
     }
 }

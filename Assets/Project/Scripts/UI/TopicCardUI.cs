@@ -1,78 +1,79 @@
-// TopicCardUI.cs
-// Place in: Assets/_Project/Scripts/UI/
-// Attach to: the TopicCard prefab root GameObject
-//
-// This script holds references to all the UI elements inside one TopicCard.
-// HomeScreenController instantiates TopicCard prefabs and then calls
-// Populate() on each one to fill in the topic-specific content.
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class TopicCardUI : MonoBehaviour
 {
-    [Header("Text fields")]
-    public TMP_Text topicNameText;    // "Electromagnetic Induction"
-    public TMP_Text formText;         // "Form 4"
-    public TMP_Text descriptionText;  // "Faraday, Lenz, generators..."
-    public TMP_Text statusBadgeText;  // "Full AR" or "Coming soon"
+    [Header("Set this in Inspector for manually placed cards")]
+    [Tooltip("Must match the id field in topics.json — e.g. em_induction")]
+    public string topicID;
 
-    [Header("Visual elements")]
-    public Image accentBar;           // left-edge colour strip
-    public Image statusBadgeImage;    // background of the status badge
-    public Image progressFill;        // the coloured fill inside progress bar
+    [Header("Text fields — leave empty if not built yet")]
+    public TMP_Text topicNameText;
+    public TMP_Text formText;
+    public TMP_Text descriptionText;
+    public TMP_Text statusBadgeText;
 
-    [Header("Colours for status badge")]
-    public Color fullARColor   = new Color(0.18f, 0.77f, 0.71f); // #2EC4B6 Coil Green
-    public Color comingSoonColor = new Color(0.10f, 0.10f, 0.18f, 0.12f); // Deep Indigo faint
+    [Header("Visual elements — leave empty if not built yet")]
+    public Image accentBar;
+    public Image statusBadgeImage;
+    public Image progressFill;
 
-    // Stored so the button click handler can pass it back
-    private string _topicID;
+    [Header("Status badge colours")]
+    public Color fullARColor    = new Color(0.180f, 0.769f, 0.710f); // Coil Green
+    public Color comingSoonColor = new Color(0.10f, 0.10f, 0.18f, 0.12f);
 
-    /// <summary>
-    /// Called by HomeScreenController after instantiating this prefab.
-    /// Fills all UI fields from the TopicEntry data.
-    /// </summary>
-    public void Populate(TopicEntry entry)
+    void Start()
     {
-        _topicID = entry.id;
-
-        topicNameText.text = entry.displayName;
-        formText.text = entry.form;
-        descriptionText.text = entry.description;
-
-        // Accent bar colour
-        if (ColorUtility.TryParseHtmlString(entry.accentColorHex, out Color accent))
-            accentBar.color = accent;
-
-        // Status badge
-        bool isFull = entry.status == "full";
-        statusBadgeText.text = isFull ? "Full AR" : "Coming soon";
-        statusBadgeImage.color = isFull ? fullARColor : comingSoonColor;
-        statusBadgeText.color = isFull
-            ? Color.white
-            : new Color(0.10f, 0.10f, 0.18f, 0.50f);
-
-        // Progress bar — zero for now, updated by LearningProgressTracker later
-        if (progressFill != null)
-            progressFill.rectTransform.sizeDelta = new Vector2(0, progressFill.rectTransform.sizeDelta.y);
-
-        // Wire the card's Button component to OnCardClicked
+        // Wire the button automatically so you don't need to set OnClick in Inspector
         Button btn = GetComponent<Button>();
         if (btn != null)
         {
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(OnCardClicked);
         }
-
-        // Disable interaction for shell topics (Coming soon)
-        if (btn != null) btn.interactable = isFull;
-        if (!isFull) topicNameText.color = new Color(0.10f, 0.10f, 0.18f, 0.40f);
     }
 
-    private void OnCardClicked()
+    // Called by HomeScreenController for instantiated cards
+    public void Populate(TopicEntry entry)
     {
-        UINavigator.Instance.OpenTopic(_topicID);
+        topicID = entry.id;
+
+        if (topicNameText)   topicNameText.text   = entry.displayName;
+        if (formText)        formText.text         = entry.form;
+        if (descriptionText) descriptionText.text  = entry.description;
+
+        if (accentBar != null &&
+            ColorUtility.TryParseHtmlString(entry.accentColorHex, out Color accent))
+            accentBar.color = accent;
+
+        bool isFull = entry.status == "full";
+
+        if (statusBadgeText)
+            statusBadgeText.text = isFull ? "Full AR" : "Coming soon";
+
+        if (statusBadgeImage)
+            statusBadgeImage.color = isFull ? fullARColor : comingSoonColor;
+
+        if (progressFill != null)
+            progressFill.rectTransform.sizeDelta =
+                new Vector2(0, progressFill.rectTransform.sizeDelta.y);
+
+        // Disable tapping for shell topics
+        Button btn = GetComponent<Button>();
+        if (btn != null) btn.interactable = isFull;
+
+        if (!isFull && topicNameText)
+            topicNameText.color = new Color(0.10f, 0.10f, 0.18f, 0.40f);
+    }
+
+    void OnCardClicked()
+    {
+        if (string.IsNullOrEmpty(topicID))
+        {
+            Debug.LogWarning("[TopicCardUI] topicID is empty — set it in the Inspector.");
+            return;
+        }
+        UINavigator.Instance.OpenTopic(topicID);
     }
 }

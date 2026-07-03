@@ -580,6 +580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5427330173467168070}
   - component: {fileID: 9099771997010625886}
+  - component: {fileID: 2269152199452520133}
   m_Layer: 5
   m_Name: StepPillsRow
   m_TagString: Untagged
@@ -635,6 +636,25 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &2269152199452520133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8643150637171409237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac4c0333d8c229d498631b5cff087491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pills:
+  - background: {fileID: 3438575837543294596}
+    label: {fileID: 8373601019101661645}
+  - background: {fileID: 6128981980813272129}
+    label: {fileID: 2428583144274183893}
+  - background: {fileID: 2624180342303510363}
+    label: {fileID: 4880501783074740648}
 --- !u!1 &8825804194727125418
 GameObject:
   m_ObjectHideFlags: 0
