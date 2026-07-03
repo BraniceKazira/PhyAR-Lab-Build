@@ -132,6 +132,9 @@ public class ARExperienceScreenController : MonoBehaviour
                 break;
 
             case "waves_ii":
+                var w = FindObjectOfType<WaveGenerator>();
+                if (w != null) w.ToggleWaveType();
+                break;
                 WaveGenerator wave = FindObjectOfType<WaveGenerator>();
                 if (wave != null)
                 {
