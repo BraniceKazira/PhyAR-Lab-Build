@@ -10,11 +10,9 @@ public class ARSessionManager : MonoBehaviour
     public ARSession        arSession;
     public ARRaycastManager arRaycastManager;
     public ARPlaneManager   arPlaneManager;
+    public GameObject       xrOrigin;
 
-    [Header("XR Origin — drag the whole XR Origin GameObject here")]
-    public GameObject xrOrigin;
-
-    [Header("Topic prefabs")]
+    [Header("Prefabs")]
     public GameObject currentElectricityPrefab;
     public GameObject emInductionPrefab;
     public GameObject wavesIIPrefab;
@@ -22,68 +20,181 @@ public class ARSessionManager : MonoBehaviour
     [Header("UI")]
     public TMP_Text   hintText;
     public GameObject placementRing;
+    public GameObject cameraCoverPanel;
 
     private static readonly List<ARRaycastHit> Hits = new List<ARRaycastHit>();
-    private GameObject _placedModel;
+    private GameObject _model;
     private bool       _placed;
     private ARExperienceScreenController _arScreen;
 
     void Awake()
     {
-        // Hide XR Origin on startup — shown only during AR
-        if (xrOrigin != null) xrOrigin.SetActive(false);
+        Debug.Log("[AR] Awake called");
+        
+        if (xrOrigin != null)
+        {
+            xrOrigin.SetActive(false);
+            Debug.Log("[AR] XR Origin deactivated in Awake");
+        }
+        else
+        {
+            Debug.LogError("[AR] xrOrigin is NULL in Awake!");
+        }
+        
+        if (cameraCoverPanel != null)
+        {
+            cameraCoverPanel.SetActive(true);
+            Debug.Log("[AR] cameraCoverPanel set active in Awake");
+        }
+        else
+        {
+            Debug.LogError("[AR] cameraCoverPanel is NULL in Awake!");
+        }
     }
 
     public void StartAR()
     {
-        // Activate entire XR Origin (camera + plane detection)
-        if (xrOrigin != null) xrOrigin.SetActive(true);
-        if (arSession != null) arSession.enabled = true;
-        if (arPlaneManager != null) arPlaneManager.enabled = true;
+        Debug.Log("========================================");
+        Debug.Log("[AR] StartAR called");
+        Debug.Log("[AR] CurrentTopicID: " + AppState.CurrentTopicID);
+        Debug.Log("========================================");
 
+        // Check all references first
+        Debug.Log("[AR] Checking references...");
+        Debug.Log("[AR] arSession is " + (arSession != null ? "assigned" : "NULL"));
+        Debug.Log("[AR] arRaycastManager is " + (arRaycastManager != null ? "assigned" : "NULL"));
+        Debug.Log("[AR] arPlaneManager is " + (arPlaneManager != null ? "assigned" : "NULL"));
+        Debug.Log("[AR] xrOrigin is " + (xrOrigin != null ? "assigned" : "NULL"));
+        Debug.Log("[AR] cameraCoverPanel is " + (cameraCoverPanel != null ? "assigned" : "NULL"));
+
+        // Show AR screen first
         UINavigator.Instance.ShowScreen(UINavigator.SCREEN_AR);
+        Debug.Log("[AR] AR screen shown");
 
-        _placed = false;
-        if (_placedModel != null) Destroy(_placedModel);
+        // Hide cover → camera visible
+        if (cameraCoverPanel != null)
+        {
+            cameraCoverPanel.SetActive(false);
+            Debug.Log("[AR] cameraCoverPanel hidden (set to false)");
+        }
+        else
+        {
+            Debug.LogError("[AR] cameraCoverPanel is NULL - cannot hide!");
+        }
 
-        ShowRing(false);
-        SetHint("Move phone slowly over a flat surface");
+        // Start AR systems
+        if (xrOrigin != null)
+        {
+            xrOrigin.SetActive(true);
+            Debug.Log("[AR] xrOrigin activated (set to true)");
+        }
+        else
+        {
+            Debug.LogError("[AR] xrOrigin is NULL - cannot activate!");
+        }
 
-        _arScreen = FindObjectOfType<ARExperienceScreenController>();
-        _arScreen?.OnARStarted(AppState.CurrentTopicID);
-    }
-
-    public void StopAR()
-    {
-        if (_placedModel != null) Destroy(_placedModel);
-        _placedModel = null;
-        _placed      = false;
-
-        // Deactivate entire XR Origin — camera feed stops
-        if (xrOrigin != null) xrOrigin.SetActive(false);
-        if (arSession != null) arSession.enabled = false;
-
-        ShowRing(false);
-        UINavigator.Instance.ShowScreen(UINavigator.SCREEN_LEARN);
-    }
-
-    public void ResetPlacement()
-    {
-        if (_placedModel != null) Destroy(_placedModel);
-        _placedModel = null;
-        _placed      = false;
+        if (arSession != null)
+        {
+            arSession.enabled = true;
+            Debug.Log("[AR] arSession enabled (set to true)");
+        }
+        else
+        {
+            Debug.LogError("[AR] arSession is NULL - cannot enable!");
+        }
 
         if (arPlaneManager != null)
         {
             arPlaneManager.enabled = true;
-            foreach (var plane in arPlaneManager.trackables)
-                plane.gameObject.SetActive(true);
+            Debug.Log("[AR] arPlaneManager enabled (set to true)");
+        }
+        else
+        {
+            Debug.LogError("[AR] arPlaneManager is NULL - cannot enable!");
+        }
+
+        _placed = false;
+        if (_model != null)
+        {
+            Destroy(_model);
+            Debug.Log("[AR] Old model destroyed");
         }
 
         ShowRing(false);
         SetHint("Move phone slowly over a flat surface");
-        if (_arScreen == null)
-            _arScreen = FindObjectOfType<ARExperienceScreenController>();
+        Debug.Log("[AR] Hint set to: 'Move phone slowly over a flat surface'");
+
+        _arScreen = FindObjectOfType<ARExperienceScreenController>();
+        if (_arScreen != null)
+        {
+            _arScreen.OnARStarted(AppState.CurrentTopicID);
+            Debug.Log("[AR] ARExperienceScreenController found and notified");
+        }
+        else
+        {
+            Debug.LogWarning("[AR] ARExperienceScreenController not found");
+        }
+
+        Debug.Log("[AR] StartAR completed");
+        Debug.Log("========================================");
+    }
+
+    public void StopAR()
+    {
+        Debug.Log("[AR] StopAR called");
+
+        if (_model != null)
+        {
+            Destroy(_model);
+            Debug.Log("[AR] Model destroyed");
+        }
+        _model = null;
+        _placed = false;
+
+        if (xrOrigin != null)
+        {
+            xrOrigin.SetActive(false);
+            Debug.Log("[AR] xrOrigin deactivated");
+        }
+
+        if (arSession != null)
+        {
+            arSession.enabled = false;
+            Debug.Log("[AR] arSession disabled");
+        }
+
+        if (arPlaneManager != null)
+        {
+            arPlaneManager.enabled = false;
+            foreach (var p in arPlaneManager.trackables)
+                p.gameObject.SetActive(false);
+            Debug.Log("[AR] arPlaneManager disabled");
+        }
+
+        if (cameraCoverPanel != null)
+        {
+            cameraCoverPanel.SetActive(true);
+            Debug.Log("[AR] cameraCoverPanel shown (set to true)");
+        }
+
+        ShowRing(false);
+        UINavigator.Instance.ShowScreen(UINavigator.SCREEN_LEARN);
+        Debug.Log("[AR] StopAR completed");
+    }
+
+    public void ResetPlacement()
+    {
+        if (_model != null) Destroy(_model);
+        _model = null;
+        _placed = false;
+        if (arPlaneManager != null)
+        {
+            arPlaneManager.enabled = true;
+            foreach (var p in arPlaneManager.trackables)
+                p.gameObject.SetActive(true);
+        }
+        ShowRing(false);
+        SetHint("Move phone slowly over a flat surface");
         _arScreen?.OnModelRemoved();
     }
 
@@ -92,63 +203,61 @@ public class ARSessionManager : MonoBehaviour
         if (xrOrigin == null || !xrOrigin.activeSelf) return;
         if (_placed) return;
 
-        Vector2 centre = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-        if (arRaycastManager.Raycast(centre, Hits, TrackableType.PlaneWithinPolygon))
-        {
-            ShowRing(true);
-            SetHint("Surface detected — tap to place");
-        }
+        var c = new Vector2(Screen.width * .5f, Screen.height * .5f);
+        if (arRaycastManager.Raycast(c, Hits, TrackableType.PlaneWithinPolygon))
+        { ShowRing(true); SetHint("Surface detected — tap to place"); }
         else
-        {
-            ShowRing(false);
-            SetHint("Move phone slowly over a flat surface");
-        }
+        { ShowRing(false); SetHint("Move phone slowly over a flat surface"); }
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             var es = UnityEngine.EventSystems.EventSystem.current;
             if (es != null && es.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                 return;
-
             if (arRaycastManager.Raycast(Input.GetTouch(0).position,
                     Hits, TrackableType.PlaneWithinPolygon))
-                PlaceModel(Hits[0].pose);
+                Place(Hits[0].pose);
         }
     }
 
-    void PlaceModel(Pose pose)
+    void Place(Pose pose)
     {
-        if (_placedModel != null) Destroy(_placedModel);
-        GameObject prefab = GetPrefab();
-        if (prefab == null) return;
+        if (_model != null) Destroy(_model);
+        var prefab = GetPrefab();
+        if (prefab == null)
+        { Debug.LogError("[AR] No prefab for: " + AppState.CurrentTopicID); return; }
 
-        _placedModel = Instantiate(prefab, pose.position, pose.rotation);
+        _model = Instantiate(prefab, pose.position, pose.rotation);
         _placed = true;
-
         ShowRing(false);
         SetHint("Pinch to scale  ·  Drag to rotate");
 
         if (arPlaneManager != null)
         {
             arPlaneManager.enabled = false;
-            foreach (var plane in arPlaneManager.trackables)
-                plane.gameObject.SetActive(false);
+            foreach (var p in arPlaneManager.trackables)
+                p.gameObject.SetActive(false);
         }
 
         if (_arScreen == null)
             _arScreen = FindObjectOfType<ARExperienceScreenController>();
         _arScreen?.OnModelPlaced(AppState.CurrentTopicID);
+        Debug.Log("[AR] Placed: " + AppState.CurrentTopicID);
     }
 
-    void ShowRing(bool show) { if (placementRing != null) placementRing.SetActive(show); }
-    void SetHint(string t)   { if (hintText != null) hintText.text = t; }
+    void ShowRing(bool s) { if (placementRing != null) placementRing.SetActive(s); }
+    void SetHint(string t) { if (hintText != null) hintText.text = t; }
 
-    GameObject GetPrefab() =>
-        AppState.CurrentTopicID switch
+    GameObject GetPrefab()
+    {
+        switch (AppState.CurrentTopicID)
         {
-            "current_electricity" => currentElectricityPrefab,
-            "em_induction"        => emInductionPrefab,
-            "waves_ii"            => wavesIIPrefab,
-            _ => emInductionPrefab
-        };
+            case "current_electricity": return currentElectricityPrefab;
+            case "em_induction": return emInductionPrefab;
+            case "waves_ii": return wavesIIPrefab;
+            default:
+                Debug.LogWarning("[AR] Unknown topic: " + AppState.CurrentTopicID);
+                return emInductionPrefab;
+        }
+    }
 }

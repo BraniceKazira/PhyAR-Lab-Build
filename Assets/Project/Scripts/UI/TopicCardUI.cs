@@ -1,3 +1,10 @@
+// TopicCardUI.cs
+// Attach to: each manually placed card (Card_Waves, Card_Electromagnetism, etc.)
+// OR attach to the TopicCard prefab if you later use instantiation.
+//
+// For manually placed cards: set topicID in the Inspector directly.
+// For instantiated cards: Populate() sets everything from JSON data.
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;

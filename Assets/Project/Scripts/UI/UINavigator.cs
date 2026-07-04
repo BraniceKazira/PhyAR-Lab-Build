@@ -18,70 +18,81 @@ public class UINavigator : MonoBehaviour
     [Header("Screen name to show on startup")]
     public string initialScreen = "Screen_Splash";
 
-    private Dictionary<string, GameObject> _screenMap;
-    private string _currentScreen;
-    private string _previousScreen;
+    private Dictionary<string, GameObject> _map;
+    private string _current = "";
+    private string _previous = "";
 
-    // ── Constants — these now match the "Screen_" naming you typed in the Inspector ──
-    public const string SCREEN_SPLASH        = "Screen_Splash";
-    public const string SCREEN_HOME          = "Screen_Home";
-    public const string SCREEN_LEARN         = "Screen_Learn";
-    public const string SCREEN_AR            = "Screen_ARExperience";
-    public const string SCREEN_FLASHCARD     = "Screen_Flashcards";
-    public const string SCREEN_FC_SUMMARY    = "Screen_FlashcardSummary";
-    public const string SCREEN_QUIZ_Q        = "Screen_QuizQuestion";
-    public const string SCREEN_QUIZ_FB       = "Screen_QuizFeedback";
-    public const string SCREEN_QUIZ_RESULTS  = "Screen_QuizResults";
-    public const string SCREEN_PROGRESS      = "Screen_Progress";
+    // ── Constants ──
+    public const string SCREEN_SPLASH       = "Screen_Splash";
+    public const string SCREEN_HOME         = "Screen_Home";
+    public const string SCREEN_LEARN        = "Screen_Learn";
+    public const string SCREEN_AR           = "Screen_ARExperience";
+    public const string SCREEN_FLASHCARD    = "Screen_Flashcards";
+    public const string SCREEN_FC_SUMMARY   = "Screen_FlashcardSummary";
+    public const string SCREEN_QUIZ_Q       = "Screen_QuizQuestion";
+    public const string SCREEN_QUIZ_FB      = "Screen_QuizFeedback";
+    public const string SCREEN_QUIZ_RESULTS = "Screen_QuizResults";
+    public const string SCREEN_PROGRESS     = "Screen_Progress";
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
 
-        _screenMap = new Dictionary<string, GameObject>();
+        _map = new Dictionary<string, GameObject>();
         foreach (var entry in screens)
         {
             if (entry.panel != null)
-                _screenMap[entry.screenName] = entry.panel;
+                _map[entry.screenName] = entry.panel;
             else
                 Debug.LogWarning($"[UINavigator] '{entry.screenName}' has no panel assigned.");
         }
 
         // Hide ALL panels first
-        foreach (var panel in _screenMap.Values)
-            panel.SetActive(false);
+        foreach (var panel in _map.Values)
+        {
+            if (panel != null)
+                panel.SetActive(false);
+        }
 
         ShowScreen(initialScreen);
     }
 
-    public void ShowScreen(string screenName)
+    // ── Core navigation method ──
+    public void ShowScreen(string name)
     {
-        // Guard against empty string calls from unwired buttons
-        if (string.IsNullOrEmpty(screenName))
+        if (string.IsNullOrEmpty(name))
         {
-            Debug.LogWarning("[UINavigator] ShowScreen called with empty name — check your button OnClick string fields.");
+            Debug.LogWarning("[UINavigator] ShowScreen called with empty name.");
             return;
         }
 
-        if (!_screenMap.ContainsKey(screenName))
+        if (!_map.ContainsKey(name))
         {
-            Debug.LogError($"[UINavigator] Screen '{screenName}' not found. " +
-                           $"Available screens: {string.Join(", ", _screenMap.Keys)}");
+            Debug.LogError($"[UINavigator] Screen '{name}' not found. Available: {string.Join(", ", _map.Keys)}");
             return;
         }
 
-        if (!string.IsNullOrEmpty(_currentScreen) && _screenMap.ContainsKey(_currentScreen))
-            _screenMap[_currentScreen].SetActive(false);
+        // ✅ CRITICAL FIX: Hide ALL screens first
+        foreach (var panel in _map.Values)
+        {
+            if (panel != null)
+                panel.SetActive(false);
+        }
 
-        _previousScreen = _currentScreen;
-        _currentScreen  = screenName;
-        _screenMap[screenName].SetActive(true);
+        // Then show the target
+        _previous = _current;
+        _current = name;
+        _map[name].SetActive(true);
 
-        Debug.Log($"[UINavigator] → {screenName}");
+        Debug.Log($"[UINavigator] → {name}");
     }
 
-    // Called by TopicCardUI when a topic card is tapped
+    // ── Convenience methods ──
     public void OpenTopic(string topicID)
     {
         AppState.CurrentTopicID = topicID;
@@ -90,8 +101,10 @@ public class UINavigator : MonoBehaviour
 
     public void GoBack()
     {
-        if (!string.IsNullOrEmpty(_previousScreen))
-            ShowScreen(_previousScreen);
+        if (!string.IsNullOrEmpty(_previous))
+            ShowScreen(_previous);
+        else
+            ShowScreen(SCREEN_HOME);
     }
 
     public void GoHome()

@@ -11,20 +11,21 @@ public class FlashcardDeckController : MonoBehaviour
     public StepPillsController stepPills;
 
     [Header("Progress")]
-    public TMP_Text progressCaptionText;     // "Card 3 of 7"
-    public RectTransform progressFillRect;   // leave empty if no fill child yet
+    public TMP_Text progressCaptionText;
+    public RectTransform progressFillRect;
     public float progressTrackWidth = 328f;
 
-    [Header("Flashcard panel")]
-    public Button cardPanelButton;   // Button component on FlashCardPanel itself
-    public TMP_Text cardText;        // QuestionText — shows question, then answer
-    public TMP_Text flipHintText;    // "Tap to reveal answer"
+    [Header("Flashcard")]
+    public Button cardPanelButton;
+    public TMP_Text cardText;
+    public TMP_Text flipHintText;
 
     [Header("Answer buttons")]
     public Button gotItButton;
     public Button stillLearningButton;
+    public Button skipButton;
 
-    [Header("Counter strip")]
+    [Header("Counter")]
     public TMP_Text knownCountText;
     public TMP_Text stillLearningCountText;
     public TMP_Text skippedCountText;
@@ -32,40 +33,43 @@ public class FlashcardDeckController : MonoBehaviour
     [Header("Sub-topic pills")]
     public SubTopicPillController subTopicPills;
 
-    [Header("Continue button")]
+    [Header("Continue")]
     public Button continueButton;
     public TMP_Text continueButtonText;
 
     void OnEnable()
     {
-        Debug.Log("[FlashcardDeck] OnEnable fired.");
-
-        if (ModuleLoader.Instance == null)
-        {
-            Debug.LogError("[FlashcardDeck] ModuleLoader.Instance is NULL.");
-            return;
-        }
+        if (ModuleLoader.Instance == null) return;
 
         if (AppState.ActiveFlashcardSession == null ||
             AppState.ActiveFlashcardSession.TopicID != AppState.CurrentTopicID)
-        {
             StartNewSession();
-        }
 
-        // Check field wiring
-        if (cardPanelButton == null)
-            Debug.LogError("[FlashcardDeck] cardPanelButton is NOT WIRED in the Inspector.");
-        else
-            Debug.Log("[FlashcardDeck] cardPanelButton IS wired to: " + cardPanelButton.gameObject.name);
-
-        if (cardText == null)
-            Debug.LogError("[FlashcardDeck] cardText is NOT WIRED in the Inspector.");
-
+        // Clear all listeners
         if (cardPanelButton != null)
         {
             cardPanelButton.onClick.RemoveAllListeners();
             cardPanelButton.onClick.AddListener(OnCardFlipped);
-            Debug.Log("[FlashcardDeck] OnClick listener attached to cardPanelButton.");
+        }
+        if (gotItButton != null)
+        {
+            gotItButton.onClick.RemoveAllListeners();
+            gotItButton.onClick.AddListener(OnGotItClicked);
+        }
+        if (stillLearningButton != null)
+        {
+            stillLearningButton.onClick.RemoveAllListeners();
+            stillLearningButton.onClick.AddListener(OnStillLearningClicked);
+        }
+        if (skipButton != null)
+        {
+            skipButton.onClick.RemoveAllListeners();
+            skipButton.onClick.AddListener(OnSkipClicked);
+        }
+        if (continueButton != null)
+        {
+            continueButton.onClick.RemoveAllListeners();
+            continueButton.onClick.AddListener(OnContinueClicked);
         }
 
         RefreshUI();
@@ -76,164 +80,138 @@ public class FlashcardDeckController : MonoBehaviour
         FlashcardDeckData deck = ModuleLoader.Instance.LoadFlashcards(AppState.CurrentTopicID);
         if (deck == null)
         {
-            Debug.LogError("[FlashcardDeck] Could not load flashcards for: " + AppState.CurrentTopicID);
+            Debug.LogError("[FC] No deck for: " + AppState.CurrentTopicID);
             return;
         }
-
         AppState.ActiveFlashcardSession = new FlashcardSession
         {
-            TopicID  = AppState.CurrentTopicID,
+            TopicID = AppState.CurrentTopicID,
             DeckData = deck
         };
     }
 
     void RefreshUI()
     {
-        FlashcardSession session = AppState.ActiveFlashcardSession;
-        if (session == null) return;
+        FlashcardSession s = AppState.ActiveFlashcardSession;
+        if (s == null) return;
 
-        // Nav title
         if (navTitleText != null)
-            navTitleText.text = "Flashcards · " + session.CurrentSubTopic.fullName;
+            navTitleText.text = "Flashcards · " + s.CurrentSubTopic.fullName;
 
-        // Step pills — Flashcards = step 2
         if (stepPills != null) stepPills.SetActiveStep(2);
 
-        // Progress
-        int cardNumber = session.CompletedCards + 1;
-        int totalCards = session.TotalCards;
+        int total = s.TotalCards;
+        int done = s.CompletedCards;
         if (progressCaptionText != null)
-            progressCaptionText.text = $"Card {cardNumber} of {totalCards}";
+            progressCaptionText.text = $"Card {done + 1} of {total}";
+        if (progressFillRect != null && total > 0)
+            progressFillRect.sizeDelta = new Vector2(
+                progressTrackWidth * ((float)done / total),
+                progressFillRect.sizeDelta.y);
 
-        if (progressFillRect != null)
-        {
-            float pct = (float)session.CompletedCards / totalCards;
-            progressFillRect.sizeDelta = new Vector2(progressTrackWidth * pct, progressFillRect.sizeDelta.y);
-        }
-
-        // Card content — show question or answer in the SAME text field
         if (cardText != null)
-        {
-            cardText.text = session.IsShowingAnswer
-                ? session.CurrentCard.answer
-                : session.CurrentCard.question;
-            Debug.Log("[FlashcardDeck] cardText.text set to: " + cardText.text);
-        }
-        else
-        {
-            Debug.LogError("[FlashcardDeck] cardText is null — cannot display question/answer.");
-        }
+            cardText.text = s.IsShowingAnswer ? s.CurrentCard.answer : s.CurrentCard.question;
 
-        // Flip hint — hide once flipped, show "Tap to reveal answer" before flip
         if (flipHintText != null)
-            flipHintText.gameObject.SetActive(!session.IsShowingAnswer);
+            flipHintText.gameObject.SetActive(!s.IsShowingAnswer);
 
-        // Buttons only usable after flip
-        if (gotItButton != null) gotItButton.interactable = session.IsShowingAnswer;
-        if (stillLearningButton != null) stillLearningButton.interactable = session.IsShowingAnswer;
+        if (gotItButton != null)
+            gotItButton.interactable = s.IsShowingAnswer;
+        if (stillLearningButton != null)
+            stillLearningButton.interactable = s.IsShowingAnswer;
+        if (skipButton != null)
+            skipButton.interactable = true;
 
-        // Counter strip
+        // COUNTERS - FIXED
         if (knownCountText != null)
-            knownCountText.text = session.KnownCardIDs.Count + " known";
+            knownCountText.text = s.KnownCardIDs.Count + " known";
         if (stillLearningCountText != null)
-            stillLearningCountText.text = session.StillLearningCardIDs.Count + " still learning";
+            stillLearningCountText.text = s.StillLearningCardIDs.Count + " still learning";
         if (skippedCountText != null)
-            skippedCountText.text = session.SkippedCardIDs.Count + " skipped";
+        {
+            skippedCountText.text = s.SkippedCardIDs.Count + " skipped";
+            skippedCountText.gameObject.SetActive(true);
+        }
 
-        // Sub-topic pills
         if (subTopicPills != null)
         {
-            SubTopicEntry[] entries = new SubTopicEntry[session.DeckData.subTopics.Count];
-            for (int i = 0; i < session.DeckData.subTopics.Count; i++)
-            {
+            var entries = new SubTopicEntry[s.DeckData.subTopics.Count];
+            for (int i = 0; i < s.DeckData.subTopics.Count; i++)
                 entries[i] = new SubTopicEntry
                 {
-                    id = session.DeckData.subTopics[i].id,
-                    shortName = session.DeckData.subTopics[i].shortName
+                    id = s.DeckData.subTopics[i].id,
+                    shortName = s.DeckData.subTopics[i].shortName
                 };
-            }
             subTopicPills.SetSubTopics(entries);
-            subTopicPills.SetActiveByIndex(session.CurrentSubTopicIndex);
+            subTopicPills.SetActiveByIndex(s.CurrentSubTopicIndex);
         }
 
-        // Continue button — only visible when current sub-topic is fully answered
-        bool subTopicDone = CheckCurrentSubTopicDone(session);
+        bool done2 = CheckSubTopicDone(s);
         if (continueButton != null)
         {
-            continueButton.gameObject.SetActive(subTopicDone);
-            if (subTopicDone && continueButtonText != null)
-                continueButtonText.text = session.HasNextCard()
-                    ? "Continue to next sub-topic"
-                    : "See your results";
+            continueButton.gameObject.SetActive(done2);
+            if (done2 && continueButtonText != null)
+                continueButtonText.text = s.HasNextCard() ? "Continue to next sub-topic" : "See your results";
         }
     }
 
-    bool CheckCurrentSubTopicDone(FlashcardSession session)
+    bool CheckSubTopicDone(FlashcardSession s)
     {
-        foreach (var card in session.CurrentSubTopic.cards)
+        foreach (var card in s.CurrentSubTopic.cards)
         {
-            bool answered = session.KnownCardIDs.Contains(card.id) ||
-                            session.StillLearningCardIDs.Contains(card.id) ||
-                            session.SkippedCardIDs.Contains(card.id);
-            if (!answered) return false;
+            if (!s.KnownCardIDs.Contains(card.id) &&
+                !s.StillLearningCardIDs.Contains(card.id) &&
+                !s.SkippedCardIDs.Contains(card.id))
+                return false;
         }
         return true;
     }
 
-    // ── Button callbacks ──────────────────────────────────────────────
-
     public void OnCardFlipped()
     {
-        Debug.Log("[FlashcardDeck] OnCardFlipped() was called — tap registered!");
-
-        if (AppState.ActiveFlashcardSession == null)
-        {
-            Debug.LogError("[FlashcardDeck] No active session — cannot flip.");
-            return;
-        }
-        if (AppState.ActiveFlashcardSession.IsShowingAnswer)
-        {
-            Debug.Log("[FlashcardDeck] Already showing answer, ignoring tap.");
-            return;
-        }
-        AppState.ActiveFlashcardSession.IsShowingAnswer = true;
-        Debug.Log("[FlashcardDeck] IsShowingAnswer set to TRUE. Answer text should be: "
-                  + AppState.ActiveFlashcardSession.CurrentCard.answer);
+        var s = AppState.ActiveFlashcardSession;
+        if (s == null || s.IsShowingAnswer) return;
+        s.IsShowingAnswer = true;
         RefreshUI();
     }
 
     public void OnGotItClicked()
     {
-        FlashcardSession session = AppState.ActiveFlashcardSession;
-        if (session == null || !session.IsShowingAnswer) return;
-
-        string cardID = session.CurrentCard.id;
-        if (!session.KnownCardIDs.Contains(cardID))
-            session.KnownCardIDs.Add(cardID);
-
-        AdvanceOrComplete(session);
+        var s = AppState.ActiveFlashcardSession;
+        if (s == null || !s.IsShowingAnswer) return;
+        string id = s.CurrentCard.id;
+        if (!s.KnownCardIDs.Contains(id)) s.KnownCardIDs.Add(id);
+        Advance(s);
     }
 
     public void OnStillLearningClicked()
     {
-        FlashcardSession session = AppState.ActiveFlashcardSession;
-        if (session == null || !session.IsShowingAnswer) return;
+        var s = AppState.ActiveFlashcardSession;
+        if (s == null || !s.IsShowingAnswer) return;
+        string id = s.CurrentCard.id;
+        if (!s.StillLearningCardIDs.Contains(id)) s.StillLearningCardIDs.Add(id);
+        Advance(s);
+    }
 
-        string cardID = session.CurrentCard.id;
-        if (!session.StillLearningCardIDs.Contains(cardID))
-            session.StillLearningCardIDs.Add(cardID);
-
-        AdvanceOrComplete(session);
+    public void OnSkipClicked()
+    {
+        var s = AppState.ActiveFlashcardSession;
+        if (s == null) return;
+        string id = s.CurrentCard.id;
+        if (!s.SkippedCardIDs.Contains(id) &&
+            !s.KnownCardIDs.Contains(id) &&
+            !s.StillLearningCardIDs.Contains(id))
+            s.SkippedCardIDs.Add(id);
+        Advance(s);
     }
 
     public void OnContinueClicked()
     {
-        FlashcardSession session = AppState.ActiveFlashcardSession;
-        if (session == null) return;
-
-        if (session.HasNextCard())
+        var s = AppState.ActiveFlashcardSession;
+        if (s == null) return;
+        if (s.HasNextCard())
         {
-            session.AdvanceCard();
+            s.AdvanceCard();
             RefreshUI();
         }
         else
@@ -242,10 +220,10 @@ public class FlashcardDeckController : MonoBehaviour
         }
     }
 
-    void AdvanceOrComplete(FlashcardSession session)
+    void Advance(FlashcardSession s)
     {
-        bool hasNext = session.AdvanceCard();
-        if (!hasNext)
+        bool more = s.AdvanceCard();
+        if (!more)
             UINavigator.Instance.ShowScreen(UINavigator.SCREEN_FC_SUMMARY);
         else
             RefreshUI();

@@ -32,30 +32,60 @@ public class ARExperienceScreenController : MonoBehaviour
     // EM Induction cycles through 3 states
     private int _emState = 0; // 0=idle, 1=magnetIn, 2=magnetOut
 
+    void Awake()
+    {
+        Debug.Log("[AR UI] Awake called");
+    }
+
+    void Start()
+    {
+        Debug.Log("[AR UI] Start called");
+        Debug.Log("[AR UI] arSessionManager is " + (arSessionManager != null ? "assigned" : "NULL"));
+    }
+
     void OnEnable()
     {
+        Debug.Log("[AR UI] OnEnable called");
         if (navTitleText != null) navTitleText.text = GetTopicName();
         SetCaption("Point phone at a flat surface to begin");
+        Debug.Log("[AR UI] OnEnable completed");
     }
 
     public void OnARStarted(string topicID)
     {
-        if (navTitleText != null) navTitleText.text = GetTopicName();
+        Debug.Log("[AR UI] ========================================");
+        Debug.Log("[AR UI] OnARStarted called for topic: " + topicID);
+        Debug.Log("[AR UI] arSessionManager is " + (arSessionManager != null ? "assigned" : "NULL"));
+        
+        if (navTitleText != null)
+        {
+            navTitleText.text = GetTopicName();
+            Debug.Log("[AR UI] navTitleText set to: " + navTitleText.text);
+        }
+        else
+        {
+            Debug.LogWarning("[AR UI] navTitleText is NULL");
+        }
+
         _emState = 0;
         _resistanceIndex = 1;
-        _amplitudeIndex  = 1;
+        _amplitudeIndex = 1;
         SetCaption("Move phone slowly over a flat surface");
         UpdateValueLabel();
+        Debug.Log("[AR UI] OnARStarted completed");
+        Debug.Log("[AR UI] ========================================");
     }
 
     public void OnModelPlaced(string topicID)
     {
+        Debug.Log("[AR UI] OnModelPlaced called for topic: " + topicID);
         SetCaption("Pinch to scale  ·  Drag to rotate");
         UpdateValueLabel();
     }
 
     public void OnModelRemoved()
     {
+        Debug.Log("[AR UI] OnModelRemoved called");
         SetCaption("Move phone slowly over a flat surface");
         if (valueLabelText != null) valueLabelText.text = "";
     }
@@ -63,6 +93,7 @@ public class ARExperienceScreenController : MonoBehaviour
     // ── Tool_Rotate → Increment (+) ──────────────────────────────────
     public void OnIncrementClicked()
     {
+        Debug.Log("[AR UI] OnIncrementClicked for topic: " + AppState.CurrentTopicID);
         switch (AppState.CurrentTopicID)
         {
             case "current_electricity":
@@ -80,6 +111,7 @@ public class ARExperienceScreenController : MonoBehaviour
     // ── Tool_Scale → Decrement (−) ────────────────────────────────────
     public void OnDecrementClicked()
     {
+        Debug.Log("[AR UI] OnDecrementClicked for topic: " + AppState.CurrentTopicID);
         switch (AppState.CurrentTopicID)
         {
             case "current_electricity":
@@ -97,6 +129,7 @@ public class ARExperienceScreenController : MonoBehaviour
     // ── Tool_Animate → Main physics action ───────────────────────────
     public void OnAnimateClicked()
     {
+        Debug.Log("[AR UI] OnAnimateClicked for topic: " + AppState.CurrentTopicID);
         switch (AppState.CurrentTopicID)
         {
             case "current_electricity":
@@ -132,9 +165,6 @@ public class ARExperienceScreenController : MonoBehaviour
                 break;
 
             case "waves_ii":
-                var w = FindObjectOfType<WaveGenerator>();
-                if (w != null) w.ToggleWaveType();
-                break;
                 WaveGenerator wave = FindObjectOfType<WaveGenerator>();
                 if (wave != null)
                 {
@@ -148,6 +178,7 @@ public class ARExperienceScreenController : MonoBehaviour
     // ── Tool_Labels → show/hide floating label ────────────────────────
     public void OnLabelsClicked()
     {
+        Debug.Log("[AR UI] OnLabelsClicked");
         _labelsVisible = !_labelsVisible;
         FindObjectOfType<ModelInteractionHandler>()?.OnToggleLabels(_labelsVisible);
         SetCaption(_labelsVisible ? "Labels shown" : "Labels hidden");
@@ -156,6 +187,7 @@ public class ARExperienceScreenController : MonoBehaviour
     // ── Tool_Summary → reset placement ───────────────────────────────
     public void OnResetClicked()
     {
+        Debug.Log("[AR UI] OnResetClicked");
         _emState = 0;
         if (arSessionManager != null) arSessionManager.ResetPlacement();
     }
@@ -163,8 +195,36 @@ public class ARExperienceScreenController : MonoBehaviour
     // ── Back button ───────────────────────────────────────────────────
     public void OnBackClicked()
     {
-        if (arSessionManager != null) arSessionManager.StopAR();
-        else UINavigator.Instance.ShowScreen(UINavigator.SCREEN_LEARN);
+        Debug.Log("[AR UI] OnBackClicked - stopping AR and returning to Learn");
+        if (arSessionManager != null)
+        {
+            arSessionManager.StopAR();
+            Debug.Log("[AR UI] StopAR called successfully");
+        }
+        else
+        {
+            Debug.LogWarning("[AR UI] arSessionManager is NULL - using fallback navigation");
+            UINavigator.Instance.ShowScreen(UINavigator.SCREEN_LEARN);
+        }
+    }
+
+    // ── Continue button ───────────────────────────────────────────────────
+    public void OnContinueClicked()
+    {
+        Debug.Log("[AR UI] OnContinueClicked - stopping AR and moving to Flashcards");
+        if (arSessionManager != null)
+        {
+            arSessionManager.StopAR();
+            Debug.Log("[AR UI] StopAR called successfully");
+        }
+        else
+        {
+            Debug.LogWarning("[AR UI] arSessionManager is NULL - using fallback navigation");
+        }
+        
+        // Navigate to flashcards after stopping AR
+        UINavigator.Instance.ShowScreen(UINavigator.SCREEN_FLASHCARD);
+        Debug.Log("[AR UI] Navigated to Flashcards");
     }
 
     // ── Apply values to AR scripts ────────────────────────────────────
@@ -206,6 +266,7 @@ public class ARExperienceScreenController : MonoBehaviour
     void SetCaption(string text)
     {
         if (captionText != null) captionText.text = text;
+        Debug.Log("[AR UI] Caption set to: " + text);
     }
 
     string GetTopicName() =>

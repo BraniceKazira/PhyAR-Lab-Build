@@ -12,7 +12,6 @@ public class SubTopicEntry
     public string shortName; // "Faraday"
 }
 
-
 /// Attach to the SubTopicPillRow GameObject (the one with Horizontal Layout Group).
 /// Controls the colour state of each pill based on which sub-topic is active.
 ///
@@ -51,61 +50,117 @@ public class SubTopicPillController : MonoBehaviour
 
     void Start()
     {
+        // ✅ Guard against null pills list
+        if (pills == null)
+        {
+            Debug.LogError("[SubTopicPills] pills list is NULL! Assign in Inspector.");
+            return;
+        }
+
         for (int i = 0; i < pills.Count; i++)
         {
+            // ✅ Guard against null toggle
+            if (pills[i].toggle == null)
+            {
+                Debug.LogWarning($"[SubTopicPills] Pill {i} has no Toggle assigned. Skipping.");
+                continue;
+            }
+
             int captured = i; // capture for lambda
-            if (pills[i].toggle != null)
-                pills[i].toggle.onValueChanged.AddListener(
-                    isOn => OnPillToggled(captured, isOn));
+            pills[i].toggle.onValueChanged.AddListener(
+                isOn => OnPillToggled(captured, isOn));
         }
         RefreshAllVisuals();
     }
 
     // ── Called by screen controllers to populate pills from JSON data ──
 
-
     /// Populates the pill row with sub-topic data from the loaded JSON.
     /// Extra pills (if topic has fewer sub-topics than pill slots) are hidden.
-
     public void SetSubTopics(SubTopicEntry[] subTopics)
     {
+        // ✅ Guard against null pills list
+        if (pills == null)
+        {
+            Debug.LogError("[SubTopicPills] pills list is NULL! Cannot set sub-topics.");
+            return;
+        }
+
+        // ✅ Guard against null or empty subTopics
+        if (subTopics == null || subTopics.Length == 0)
+        {
+            Debug.LogWarning("[SubTopicPills] No sub-topics provided. Hiding all pills.");
+            foreach (var pill in pills)
+            {
+                if (pill != null && pill.toggle != null)
+                    pill.toggle.gameObject.SetActive(false);
+            }
+            return;
+        }
+
         for (int i = 0; i < pills.Count; i++)
         {
+            // ✅ Guard against null pill data
+            if (pills[i] == null)
+            {
+                Debug.LogWarning($"[SubTopicPills] Pill {i} is NULL. Skipping.");
+                continue;
+            }
+
             if (i < subTopics.Length)
             {
-                pills[i].toggle.gameObject.SetActive(true);
-                pills[i].label.text    = subTopics[i].shortName;
-                pills[i].subTopicID    = subTopics[i].id;
+                if (pills[i].toggle != null)
+                    pills[i].toggle.gameObject.SetActive(true);
+                if (pills[i].label != null)
+                    pills[i].label.text = subTopics[i].shortName;
+                pills[i].subTopicID = subTopics[i].id;
             }
             else
             {
                 // Hide unused pills for topics with fewer sub-topics
-                pills[i].toggle.gameObject.SetActive(false);
+                if (pills[i].toggle != null)
+                    pills[i].toggle.gameObject.SetActive(false);
             }
         }
 
         // Select the first pill by default
-        if (pills.Count > 0 && subTopics.Length > 0)
+        if (pills.Count > 0 && subTopics.Length > 0 && pills[0] != null && pills[0].toggle != null)
         {
             pills[0].toggle.isOn = true;
             SetActiveByIndex(0);
         }
     }
 
-    /// <summary>
     /// Directly activate a pill by index (used when resuming a session
     /// mid-sub-topic so the correct pill is highlighted).
-    /// </summary>
     public void SetActiveByIndex(int index)
     {
+        // ✅ Guard against null pills list
+        if (pills == null)
+        {
+            Debug.LogError("[SubTopicPills] pills list is NULL! Cannot set active.");
+            return;
+        }
+
         for (int i = 0; i < pills.Count; i++)
+        {
+            // ✅ Guard against null pill data
+            if (pills[i] == null) continue;
             UpdatePillVisual(pills[i], i == index);
+        }
     }
 
     // ── Private ───────────────────────────────────────────────────────
 
     void OnPillToggled(int index, bool isOn)
     {
+        // ✅ Guard against index out of range
+        if (pills == null || index < 0 || index >= pills.Count || pills[index] == null)
+        {
+            Debug.LogWarning($"[SubTopicPills] Invalid pill index: {index}");
+            return;
+        }
+
         UpdatePillVisual(pills[index], isOn);
         if (isOn)
             OnSubTopicSelected?.Invoke(pills[index].subTopicID);
@@ -113,6 +168,9 @@ public class SubTopicPillController : MonoBehaviour
 
     void UpdatePillVisual(PillData pill, bool isActive)
     {
+        // ✅ Guard against null pill
+        if (pill == null) return;
+
         if (pill.background != null)
             pill.background.color = isActive ? activeBackground : inactiveBackground;
         if (pill.label != null)
@@ -121,9 +179,16 @@ public class SubTopicPillController : MonoBehaviour
 
     void RefreshAllVisuals()
     {
+        // ✅ Guard against null pills list
+        if (pills == null)
+        {
+            Debug.LogError("[SubTopicPills] pills list is NULL! Cannot refresh visuals.");
+            return;
+        }
+
         for (int i = 0; i < pills.Count; i++)
         {
-            if (pills[i].toggle != null)
+            if (pills[i] != null && pills[i].toggle != null)
                 UpdatePillVisual(pills[i], pills[i].toggle.isOn);
         }
     }

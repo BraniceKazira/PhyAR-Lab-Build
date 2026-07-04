@@ -1,4 +1,5 @@
 # PhyAR Lab
+![App Logo](image.png)
 
 > **Offline mobile augmented reality physics learning for students*. *
 
@@ -129,7 +130,12 @@ Unity compiles the APK and installs it directly to the connected phone.
 
 ---
 
-## Designs
+## Product Demo
+https://canva.link/td68fg5zsfe9ojk
+
+## Product APK
+https://drive.google.com/file/d/1A2z783eZ16jaRzJ4_-ho5Tw8vCBoDVh9/view?usp=drive_link
+
 
 ### Figma prototype
 
