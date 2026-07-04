@@ -76,7 +76,7 @@ Your Android phone must support ARCore. Check compatibility: https://developers.
 ### Step 1 — Clone the repository
 
 ```bash
-git clone https://github.com/[your-username]/PhyAR-Lab.git
+git clone https://github.com/BraniceKazira/PhyAR-Lab.git
 cd PhyAR-Lab
 ```
 
@@ -134,8 +134,7 @@ Unity compiles the APK and installs it directly to the connected phone.
 https://canva.link/td68fg5zsfe9ojk
 
 ## Product APK
-https://drive.google.com/file/d/1A2z783eZ16jaRzJ4_-ho5Tw8vCBoDVh9/view?usp=drive_link
-
+https://drive.google.com/file/d/11a753r6lJgBQQq-zetIrZATMVPxU5Qy-/view?usp=sharing
 
 ### Figma prototype
 
