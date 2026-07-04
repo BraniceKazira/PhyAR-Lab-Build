@@ -1,7 +1,7 @@
 # PhyAR Lab — Testing Report
 
-![Tests screenshot](image.png)
-![Tests screenshot](image-1.png)
+PhyAR-Lab\Docs\Topic Selection.png
+PhyAR-Lab\Docs\Tests screenshot2.png
 ## 1. Testing Strategies
 
 ### 1.1 Unit Testing (Script-level)
