@@ -37,7 +37,7 @@ The app runs entirely offline on any ARCore-compatible Android smartphone. No in
 
 ## GitHub Repository
 
-**https://github.com/[your-username]/PhyAR-Lab**
+**https://github.com/BraniceKazira/PhyAR-Lab.git**
 
 ---
 
@@ -209,7 +209,7 @@ Assets/
 ### Phase 3 — User acceptance testing (Weeks 7–10)
 
 - Deploy to two sub-county public secondary schools in Nairobi
-- 20 Form 3/4 students — pre-test and post-test (KCSE-aligned)
+- 20 Form 3/4 students — post-test (KCSE-aligned)
 - System Usability Scale (SUS) administered at final session
 - Session logs exported via USB / ADB for analysis
 
@@ -224,8 +224,6 @@ Assets/
 
 Release APK: `builds/PhyAR-Lab-v1.0.apk`
 Sideload on any ARCore-compatible Android device. No Play Store required for research deployment.
-
-Teacher session log export: long-press the app logo on the home screen for 3 seconds to open the PIN-protected teacher panel. Export all JSON logs to the device Downloads folder, then copy via USB.
 
 ---
 
