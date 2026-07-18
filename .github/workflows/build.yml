@@ -1,8 +1,6 @@
 name: Build Android APK
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -10,18 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Build Android APK
+    - name: Build
       uses: game-ci/unity-builder@v4
       with:
         targetPlatform: Android
         allowDirtyBuild: true
-        buildMethod: BuildScript.BuildAndroid
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: PhyAR-Lab-APK
+        name: APK
         path: build/Android/*.apk
