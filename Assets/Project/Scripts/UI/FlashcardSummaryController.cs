@@ -1,13 +1,14 @@
+// FlashcardSummaryController.cs
+// Folder: Assets/_Project/Scripts/UI/
+
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class FlashcardSummaryController : MonoBehaviour
 {
     [Header("Nav")]
     public TMP_Text navTitleText;
-
-    [Header("Optional heading — leave empty if you don't have this text object")]
-    public TMP_Text completeHeadingText;
 
     [Header("Score card bars")]
     public TMP_Text knownLabelText;
@@ -16,111 +17,73 @@ public class FlashcardSummaryController : MonoBehaviour
     public RectTransform knownFillRect;
     public RectTransform stillLearningFillRect;
     public RectTransform skippedFillRect;
-    public float barTrackWidth = 224f;
 
-    // Checklist rows are found automatically — no field needed here.
+    [Header("Set this to the pixel width of the bar TRACK")]
+    [Tooltip("Measure the BarTrack Image width in the Inspector")]
+    public float barTrackWidth = 328f; // ← CHANGE THIS TO YOUR ACTUAL TRACK WIDTH
+
+    [Header("Buttons")]
+    public Button retryButton;
+    public Button quizButton;
 
     void OnEnable()
     {
-        Debug.Log("[FlashcardSummary] OnEnable fired.");
-
-        FlashcardSession session = AppState.ActiveFlashcardSession;
+        var session = AppState.ActiveFlashcardSession;
         if (session == null)
         {
-            Debug.LogWarning("[FlashcardSummary] No active flashcard session found.");
+            Debug.LogWarning("[Summary] No active flashcard session.");
             return;
         }
-
         PopulateScreen(session);
     }
 
     void PopulateScreen(FlashcardSession session)
     {
-        // Nav title
         if (navTitleText != null)
-        {
-            TopicListWrapper topics = ModuleLoader.Instance.LoadTopicList();
-            string title = "Flashcard Summary";
-            if (topics != null)
-            {
-                TopicEntry entry = topics.topics.Find(t => t.id == session.TopicID);
-                if (entry != null) title = "Flashcard Summary · " + entry.displayName;
-            }
-            navTitleText.text = title;
-        }
+            navTitleText.text = "Flashcard Summary";
 
-        if (completeHeadingText != null)
-            completeHeadingText.text = "Flashcards complete!";
-
-        // Score card
         int known = session.KnownCardIDs.Count;
         int stillLearning = session.StillLearningCardIDs.Count;
         int skipped = session.SkippedCardIDs.Count;
         int total = Mathf.Max(known + stillLearning + skipped, 1);
 
-        if (knownLabelText != null) knownLabelText.text = $"Known {known}";
-        if (stillLearningLabelText != null) stillLearningLabelText.text = $"Still learning {stillLearning}";
-        if (skippedLabelText != null) skippedLabelText.text = $"Skipped {skipped}";
+        // Labels
+        if (knownLabelText != null)
+            knownLabelText.text = $"Known {known}";
+        if (stillLearningLabelText != null)
+            stillLearningLabelText.text = $"Learning {stillLearning}";
+        if (skippedLabelText != null)
+            skippedLabelText.text = $"Skipped {skipped}";
 
-        SetBarWidth(knownFillRect, known, total);
-        SetBarWidth(stillLearningFillRect, stillLearning, total);
-        SetBarWidth(skippedFillRect, skipped, total);
-
-        // Checklist — find all rows automatically, fill in order
-        BuildChecklist(session);
+        // Set bars with clamping
+        SetBar(knownFillRect, known, total);
+        SetBar(stillLearningFillRect, stillLearning, total);
+        SetBar(skippedFillRect, skipped, total);
     }
 
-    void SetBarWidth(RectTransform fill, int value, int total)
+    void SetBar(RectTransform fill, int value, int total)
     {
         if (fill == null) return;
-        float width = (float)value / total * barTrackWidth;
-        fill.sizeDelta = new Vector2(width, fill.sizeDelta.y);
+        
+        // ✅ FIX: Calculate width and clamp to barTrackWidth
+        float calculatedWidth = (float)value / total * barTrackWidth;
+        float clampedWidth = Mathf.Clamp(calculatedWidth, 0f, barTrackWidth);
+        fill.sizeDelta = new Vector2(clampedWidth, fill.sizeDelta.y);
+        
+        // Debug log to verify
+        Debug.Log($"[Summary] value={value}, total={total}, trackWidth={barTrackWidth}, clampedWidth={clampedWidth}");
     }
-
-    void BuildChecklist(FlashcardSession session)
-    {
-        ChecklistRowUI[] rows = GetComponentsInChildren<ChecklistRowUI>(true);
-
-        Debug.Log($"[FlashcardSummary] Found {rows.Length} checklist rows. " +
-                  $"Topic has {session.DeckData.subTopics.Count} sub-topics.");
-
-        for (int i = 0; i < rows.Length; i++)
-        {
-            if (i < session.DeckData.subTopics.Count)
-            {
-                var subTopic = session.DeckData.subTopics[i];
-
-                // A sub-topic counts as "done" if every card in it is marked Known
-                bool allKnown = true;
-                foreach (var card in subTopic.cards)
-                {
-                    if (!session.KnownCardIDs.Contains(card.id))
-                    {
-                        allKnown = false;
-                        break;
-                    }
-                }
-
-                rows[i].gameObject.SetActive(true);
-                rows[i].Populate(subTopic.fullName, allKnown);
-            }
-            else
-            {
-                // Hide extra rows if this topic has fewer sub-topics
-                rows[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
-    // ── Button callbacks ──────────────────────────────────────────────
 
     public void OnRetryUnknownClicked()
     {
-        if (AppState.ActiveFlashcardSession != null)
+        var s = AppState.ActiveFlashcardSession;
+        if (s != null)
         {
-            AppState.ActiveFlashcardSession.CurrentSubTopicIndex = 0;
-            AppState.ActiveFlashcardSession.CurrentCardIndex = 0;
-            AppState.ActiveFlashcardSession.IsShowingAnswer = false;
+            s.CurrentCardIndex = 0;
+            s.IsShowingAnswer = false;
+            s.KnownCardIDs.Clear();
+            s.StillLearningCardIDs.Clear();
+            s.SkippedCardIDs.Clear();
         }
         UINavigator.Instance.ShowScreen(UINavigator.SCREEN_FLASHCARD);
     }

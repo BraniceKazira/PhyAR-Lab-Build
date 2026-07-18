@@ -4,6 +4,10 @@
 //
 // Shows: score ring, heading, performance breakdown only.
 // Per-question review dropped — cleaner UX for KCSE students.
+//
+// FIX: Added static flag to prevent OnEnable from running
+// multiple times, which caused the screen to reappear behind
+// the Progress dashboard.
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,8 +50,18 @@ public class QuizResultsController : MonoBehaviour
     public Button retryButton;
     public Button nextTopicButton;
 
+    // ── FIX: Static flag to prevent re‑entry ──────────────────────────
+    private static bool _isShowing = false;
+
     void OnEnable()
     {
+        // If we're already populating, ignore this call (prevents overlap)
+        if (_isShowing)
+        {
+            Debug.Log("[QuizResults] Already showing – skipping re‑entry.");
+            return;
+        }
+
         QuizSession session = AppState.ActiveQuizSession;
         if (session == null)
         {
@@ -55,6 +69,9 @@ public class QuizResultsController : MonoBehaviour
             return;
         }
 
+        _isShowing = true;
+
+        // Wire up buttons
         if (retryButton != null)
         {
             retryButton.onClick.RemoveAllListeners();
@@ -68,6 +85,18 @@ public class QuizResultsController : MonoBehaviour
 
         PopulateScreen(session);
         if (sessionLogger != null) LogSession(session);
+
+        // ── FIX: Clear the session so it won't trigger again ──────────
+        AppState.ActiveQuizSession = null;
+
+        // ── FIX: Reset flag after we're done ──────────────────────────
+        _isShowing = false;
+    }
+
+    void OnDisable()
+    {
+        // Ensure the flag is cleared when the screen is hidden
+        _isShowing = false;
     }
 
     void PopulateScreen(QuizSession session)
@@ -137,12 +166,17 @@ public class QuizResultsController : MonoBehaviour
 
     public void OnRetryQuizClicked()
     {
+        // ── FIX: Reset flag and clear session ─────────────────────────
+        _isShowing = false;
         AppState.ActiveQuizSession = null;
         UINavigator.Instance.ShowScreen(UINavigator.SCREEN_QUIZ_Q);
     }
 
     public void OnNextTopicClicked()
     {
+        // ── FIX: Reset flag and clear session ─────────────────────────
+        _isShowing = false;
+        AppState.ActiveQuizSession = null;
         UINavigator.Instance.GoHome();
     }
 }

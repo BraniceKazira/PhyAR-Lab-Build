@@ -1,0 +1,55 @@
+{
+  "topicID": "waves",
+  "subTopics": [
+    {
+      "id": "wave_properties",
+      "shortName": "Properties",
+      "fullName": "6.1 Wave Properties",
+      "cards": [
+        {"id":"wv_p_001","question":"State the wave equation.","answer":"v = fλ, where v is wave speed (m/s), f is frequency (Hz), and λ is wavelength (m)."},
+        {"id":"wv_p_002","question":"Define frequency and period of a wave.","answer":"Frequency (f) is the number of cycles per second (Hz). Period (T) is the time for one complete cycle. T = 1/f."},
+        {"id":"wv_p_003","question":"Define amplitude of a wave.","answer":"The maximum displacement of a particle from its rest position. It determines the energy carried by the wave."}
+      ]
+    },
+    {
+      "id": "reflection",
+      "shortName": "Reflection",
+      "fullName": "6.2 Reflection of Waves",
+      "cards": [
+        {"id":"wv_r_001","question":"State the law of reflection for waves.","answer":"The angle of incidence equals the angle of reflection, both measured from the normal to the reflecting surface."},
+        {"id":"wv_r_002","question":"What properties of a wave remain unchanged during reflection?","answer":"Speed, frequency, and wavelength all remain the same."},
+        {"id":"wv_r_003","question":"What is an echo?","answer":"A reflected sound wave heard after the original sound. The reflecting surface must be at least 17 m away for a distinct echo."}
+      ]
+    },
+    {
+      "id": "refraction",
+      "shortName": "Refraction",
+      "fullName": "6.3 Refraction of Waves",
+      "cards": [
+        {"id":"wv_rf_001","question":"Define refraction of waves.","answer":"The change in direction of a wave as it passes from one medium to another due to a change in its speed."},
+        {"id":"wv_rf_002","question":"State Snell's law for waves.","answer":"n₁ sin θ₁ = n₂ sin θ₂, where n is the refractive index and θ is the angle to the normal."},
+        {"id":"wv_rf_003","question":"What happens to wavelength during refraction?","answer":"Wavelength changes proportionally to speed. Frequency stays constant."}
+      ]
+    },
+    {
+      "id": "diffraction",
+      "shortName": "Diffraction",
+      "fullName": "6.4 Diffraction of Waves",
+      "cards": [
+        {"id":"wv_d_001","question":"Define diffraction.","answer":"The spreading of waves around obstacles or through openings. It is most significant when the gap size is comparable to the wavelength."},
+        {"id":"wv_d_002","question":"What happens to wave speed and frequency during diffraction?","answer":"Both remain unchanged. Only the direction of propagation changes."},
+        {"id":"wv_d_003","question":"Give two examples of diffraction.","answer":"(1) Sound bending around corners. (2) Radio waves diffracting over hills."}
+      ]
+    },
+    {
+      "id": "interference",
+      "shortName": "Interference",
+      "fullName": "6.5 Interference of Waves",
+      "cards": [
+        {"id":"wv_i_001","question":"Define interference of waves.","answer":"The combination of two or more waves at the same point, resulting in a new wave pattern based on superposition."},
+        {"id":"wv_i_002","question":"State the condition for constructive interference.","answer":"Two waves meet in phase (path difference = nλ). Their amplitudes add together."},
+        {"id":"wv_i_003","question":"State the condition for destructive interference.","answer":"Two waves meet out of phase (path difference = (n+½)λ). Their amplitudes cancel."}
+      ]
+    }
+  ]
+}

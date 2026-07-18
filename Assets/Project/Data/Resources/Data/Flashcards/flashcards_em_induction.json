@@ -7,10 +7,8 @@
       "fullName": "5.1 Basics of Induction",
       "cards": [
         {"id":"em_b_001","question":"What is electromagnetic induction?","answer":"The process of generating an EMF in a conductor by changing the magnetic flux passing through it."},
-        {"id":"em_b_002","question":"What is magnetic flux?","answer":"The product of the magnetic field strength (B) and the area (A) perpendicular to the field: \u03a6 = BA cos\u03b8."},
-        {"id":"em_b_003","question":"What is the SI unit of magnetic flux?","answer":"The Weber (Wb). 1 Wb = 1 T\u00b7m\u00b2."},
-        {"id":"em_b_004","question":"Name two ways to induce an EMF in a coil.","answer":"(1) Move the coil in a magnetic field. (2) Change the strength of the magnetic field passing through the coil."},
-        {"id":"em_b_005","question":"What is a search coil used for?","answer":"It is used to detect and measure changing magnetic fields. When placed in a changing field, an EMF is induced in it."}
+        {"id":"em_b_002","question":"What is magnetic flux?","answer":"The product of magnetic field strength (B) and area (A) perpendicular to the field: Φ = BA cos θ."},
+        {"id":"em_b_003","question":"What is the SI unit of magnetic flux?","answer":"The Weber (Wb). 1 Wb = 1 T·m²."}
       ]
     },
     {
@@ -18,11 +16,9 @@
       "shortName": "Faraday",
       "fullName": "5.2 Faraday's Law",
       "cards": [
-        {"id":"em_f_001","question":"State Faraday's law of electromagnetic induction.","answer":"The induced EMF in a circuit is directly proportional to the rate of change of magnetic flux linkage through the circuit."},
-        {"id":"em_f_002","question":"Write the mathematical form of Faraday's law.","answer":"EMF = -N \u00d7 (\u0394\u03a6 / \u0394t), where N is number of turns, \u0394\u03a6 is change in flux, and \u0394t is time."},
-        {"id":"em_f_003","question":"A coil of 100 turns experiences a flux change of 0.05 Wb in 0.5 s. What is the induced EMF?","answer":"EMF = N \u00d7 \u0394\u03a6/\u0394t = 100 \u00d7 (0.05/0.5) = 100 \u00d7 0.1 = 10 V."},
-        {"id":"em_f_004","question":"How does increasing the number of turns in a coil affect the induced EMF?","answer":"It increases the induced EMF. Doubling the number of turns doubles the EMF (EMF \u221d N)."},
-        {"id":"em_f_005","question":"What does the negative sign in Faraday's law indicate?","answer":"It indicates that the induced EMF opposes the change in flux — this is Lenz's law."}
+        {"id":"em_f_001","question":"State Faraday's law of electromagnetic induction.","answer":"The induced EMF is directly proportional to the rate of change of magnetic flux linkage."},
+        {"id":"em_f_002","question":"Write the mathematical form of Faraday's law.","answer":"EMF = -N × (ΔΦ / Δt), where N is number of turns, ΔΦ is change in flux, and Δt is time."},
+        {"id":"em_f_003","question":"What does the negative sign in Faraday's law indicate?","answer":"It indicates Lenz's law — the induced EMF opposes the change in flux."}
       ]
     },
     {
@@ -30,11 +26,9 @@
       "shortName": "Lenz",
       "fullName": "5.3 Lenz's Law",
       "cards": [
-        {"id":"em_l_001","question":"State Lenz's law.","answer":"The induced current is always in a direction that opposes the change in magnetic flux that caused it."},
-        {"id":"em_l_002","question":"Why does Lenz's law obey conservation of energy?","answer":"If the induced current aided the change causing it, the current would increase indefinitely — creating energy from nothing. Lenz's law ensures energy must be supplied to maintain induction."},
-        {"id":"em_l_003","question":"A north pole is moved towards a coil. What polarity does the near face of the coil take?","answer":"North pole — it repels the approaching magnet, opposing the increasing flux (Lenz's law)."},
-        {"id":"em_l_004","question":"What is back-EMF?","answer":"An EMF induced in a motor's coil that opposes the supply voltage, due to Lenz's law. It limits the current through the motor."},
-        {"id":"em_l_005","question":"Give one practical application of Lenz's law.","answer":"Electromagnetic braking in trains — eddy currents induced in metal discs oppose the motion, slowing the vehicle without mechanical contact."}
+        {"id":"em_l_001","question":"State Lenz's law.","answer":"The induced current flows in a direction that opposes the change in magnetic flux that caused it."},
+        {"id":"em_l_002","question":"Why does Lenz's law obey conservation of energy?","answer":"If the induced current aided the change, energy would be created from nothing. Lenz's law ensures energy must be supplied to maintain induction."},
+        {"id":"em_l_003","question":"What is back-EMF?","answer":"An EMF induced in a motor's coil that opposes the supply voltage, due to Lenz's law."}
       ]
     },
     {
@@ -42,11 +36,9 @@
       "shortName": "Generators",
       "fullName": "5.4 Generators",
       "cards": [
-        {"id":"em_g_001","question":"What is the basic principle of operation of an AC generator?","answer":"A coil rotates in a magnetic field. The flux through the coil changes continuously, inducing a sinusoidal alternating EMF."},
-        {"id":"em_g_002","question":"What is the function of slip rings in an AC generator?","answer":"They allow the rotating coil to maintain continuous electrical contact with the external circuit while rotating freely."},
-        {"id":"em_g_003","question":"How does a DC generator differ from an AC generator?","answer":"A DC generator uses a split-ring commutator instead of slip rings. The commutator reverses the connection every half turn, so the output is always in one direction."},
-        {"id":"em_g_004","question":"At what position of the coil is the induced EMF maximum in a generator?","answer":"When the coil is parallel to the magnetic field (flux change is maximum at this instant)."},
-        {"id":"em_g_005","question":"What is the frequency of AC in Kenya's national grid?","answer":"50 Hz."}
+        {"id":"em_g_001","question":"What is the basic principle of an AC generator?","answer":"A coil rotates in a magnetic field, changing the flux through it and inducing a sinusoidal alternating EMF."},
+        {"id":"em_g_002","question":"What is the function of slip rings in an AC generator?","answer":"They allow the rotating coil to maintain continuous electrical contact with the external circuit."},
+        {"id":"em_g_003","question":"What is the frequency of AC in Kenya's national grid?","answer":"50 Hz."}
       ]
     },
     {
@@ -54,11 +46,9 @@
       "shortName": "Transformers",
       "fullName": "5.5 Transformers",
       "cards": [
-        {"id":"em_t_001","question":"State the principle of operation of a transformer.","answer":"A changing current in the primary coil creates a changing magnetic flux in the iron core, which induces an EMF in the secondary coil by mutual induction."},
-        {"id":"em_t_002","question":"State the transformer turns ratio formula.","answer":"Vs/Vp = Ns/Np, where Vs and Vp are secondary and primary voltages, and Ns and Np are the number of turns."},
-        {"id":"em_t_003","question":"What is a step-up transformer?","answer":"A transformer where the secondary coil has more turns than the primary (Ns > Np), so the output voltage is higher than the input."},
-        {"id":"em_t_004","question":"Name two causes of energy loss in a transformer.","answer":"(1) Eddy currents in the iron core — reduced by laminating the core. (2) Resistance of the coil wires causing I\u00b2R heating losses."},
-        {"id":"em_t_005","question":"A step-down transformer has Np=5000 and Ns=250. If primary voltage is 11,000V, find the secondary voltage.","answer":"Vs = Vp \u00d7 (Ns/Np) = 11,000 \u00d7 (250/5000) = 11,000 \u00d7 0.05 = 550 V."}
+        {"id":"em_t_001","question":"State the transformer turns ratio formula.","answer":"Vs/Vp = Ns/Np, where Vs and Vp are secondary and primary voltages, and Ns and Np are the number of turns."},
+        {"id":"em_t_002","question":"What is a step-up transformer?","answer":"A transformer where Ns > Np, so the output voltage is higher than the input."},
+        {"id":"em_t_003","question":"Name two causes of energy loss in a transformer.","answer":"(1) Eddy currents in the iron core — reduced by laminating the core. (2) I²R heating losses in the coil wires."}
       ]
     }
   ]

@@ -1,6 +1,6 @@
 // ARExperienceScreenController.cs
-// Folder:  Assets/_Project/Scripts/UI/
-// Attach:  Screen_ARExperience panel in Main.unity
+// Folder: Assets/_Project/Scripts/UI/
+// Attach to: Screen_ARExperience panel in Main.unity
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,11 +23,11 @@ public class ARExperienceScreenController : MonoBehaviour
     private bool _labelsVisible = true;
 
     // ── Preset values ─────────────────────────────────────────────────
-    private float[] _resistancePresets = { 5f, 10f, 20f, 50f, 100f };
-    private int     _resistanceIndex   = 1;
+    private float[] _resistancePresets = { 5f, 10f, 20f, 30f, 50f, 100f };
+    private int     _resistanceIndex   = 1; // start at 10Ω
 
     private float[] _amplitudePresets  = { 0.02f, 0.05f, 0.08f, 0.12f };
-    private int     _amplitudeIndex    = 1;
+    private int     _amplitudeIndex    = 1; // start at 0.05m
 
     // EM Induction cycles through 3 states
     private int _emState = 0; // 0=idle, 1=magnetIn, 2=magnetOut
@@ -90,7 +90,7 @@ public class ARExperienceScreenController : MonoBehaviour
         if (valueLabelText != null) valueLabelText.text = "";
     }
 
-    // ── Tool_Rotate → Increment (+) ──────────────────────────────────
+    // ── Add (+) button ────────────────────────────────────────────────
     public void OnIncrementClicked()
     {
         Debug.Log("[AR UI] OnIncrementClicked for topic: " + AppState.CurrentTopicID);
@@ -108,7 +108,7 @@ public class ARExperienceScreenController : MonoBehaviour
         UpdateValueLabel();
     }
 
-    // ── Tool_Scale → Decrement (−) ────────────────────────────────────
+    // ── Subtract (−) button ───────────────────────────────────────────
     public void OnDecrementClicked()
     {
         Debug.Log("[AR UI] OnDecrementClicked for topic: " + AppState.CurrentTopicID);
@@ -126,19 +126,27 @@ public class ARExperienceScreenController : MonoBehaviour
         UpdateValueLabel();
     }
 
-    // ── Tool_Animate → Main physics action ───────────────────────────
+    // ── Animate button ────────────────────────────────────────────────
     public void OnAnimateClicked()
     {
         Debug.Log("[AR UI] OnAnimateClicked for topic: " + AppState.CurrentTopicID);
+
         switch (AppState.CurrentTopicID)
         {
             case "current_electricity":
-                FindObjectOfType<CircuitSimulator>()?.ToggleMode();
                 CircuitSimulator sim = FindObjectOfType<CircuitSimulator>();
                 if (sim != null)
+                {
+                    sim.ToggleMode();
                     SetCaption(sim.mode == CircuitSimulator.CircuitMode.Series
-                        ? "Series circuit — same current through all" 
+                        ? "Series circuit — same current through all"
                         : "Parallel circuit — same voltage across all");
+                }
+                else
+                {
+                    SetCaption("Circuit simulator not found");
+                    Debug.LogWarning("[AR UI] CircuitSimulator not found in scene");
+                }
                 break;
 
             case "em_induction":
@@ -162,6 +170,11 @@ public class ARExperienceScreenController : MonoBehaviour
                         SetCaption("Magnet stationary → no EMF (Faraday)");
                     }
                 }
+                else
+                {
+                    SetCaption("EM Induction controller not found");
+                    Debug.LogWarning("[AR UI] EMInductionController not found in scene");
+                }
                 break;
 
             case "waves_ii":
@@ -171,11 +184,16 @@ public class ARExperienceScreenController : MonoBehaviour
                     wave.enabled = !wave.enabled;
                     SetCaption(wave.enabled ? "Wave propagating →" : "Wave paused");
                 }
+                else
+                {
+                    SetCaption("Wave generator not found");
+                    Debug.LogWarning("[AR UI] WaveGenerator not found in scene");
+                }
                 break;
         }
     }
 
-    // ── Tool_Labels → show/hide floating label ────────────────────────
+    // ── Labels button ──────────────────────────────────────────────────
     public void OnLabelsClicked()
     {
         Debug.Log("[AR UI] OnLabelsClicked");
@@ -184,12 +202,21 @@ public class ARExperienceScreenController : MonoBehaviour
         SetCaption(_labelsVisible ? "Labels shown" : "Labels hidden");
     }
 
-    // ── Tool_Summary → reset placement ───────────────────────────────
+    // ── Reset button ──────────────────────────────────────────────────
     public void OnResetClicked()
     {
         Debug.Log("[AR UI] OnResetClicked");
         _emState = 0;
-        if (arSessionManager != null) arSessionManager.ResetPlacement();
+        if (arSessionManager != null)
+        {
+            arSessionManager.ResetPlacement();
+            SetCaption("Model removed — tap to place a new one");
+        }
+        else
+        {
+            SetCaption("Cannot reset — AR session manager missing");
+            Debug.LogWarning("[AR UI] ARSessionManager not found");
+        }
     }
 
     // ── Back button ───────────────────────────────────────────────────
@@ -208,7 +235,7 @@ public class ARExperienceScreenController : MonoBehaviour
         }
     }
 
-    // ── Continue button ───────────────────────────────────────────────────
+    // ── Continue button ───────────────────────────────────────────────
     public void OnContinueClicked()
     {
         Debug.Log("[AR UI] OnContinueClicked - stopping AR and moving to Flashcards");
@@ -221,7 +248,7 @@ public class ARExperienceScreenController : MonoBehaviour
         {
             Debug.LogWarning("[AR UI] arSessionManager is NULL - using fallback navigation");
         }
-        
+
         // Navigate to flashcards after stopping AR
         UINavigator.Instance.ShowScreen(UINavigator.SCREEN_FLASHCARD);
         Debug.Log("[AR UI] Navigated to Flashcards");
@@ -232,7 +259,11 @@ public class ARExperienceScreenController : MonoBehaviour
     {
         float r = _resistancePresets[_resistanceIndex];
         CircuitSimulator sim = FindObjectOfType<CircuitSimulator>();
-        if (sim != null) { sim.SetResistance1(r); sim.SetResistance2(r); }
+        if (sim != null)
+        {
+            sim.SetResistance1(r);
+            sim.SetResistance2(r);
+        }
     }
 
     void ApplyAmplitude()
@@ -240,6 +271,7 @@ public class ARExperienceScreenController : MonoBehaviour
         FindObjectOfType<WaveGenerator>()?.SetAmplitude(_amplitudePresets[_amplitudeIndex]);
     }
 
+    // ── Update the value label on the nav bar ────────────────────────
     void UpdateValueLabel()
     {
         if (valueLabelText == null) return;
@@ -248,8 +280,9 @@ public class ARExperienceScreenController : MonoBehaviour
         {
             case "current_electricity":
                 float r = _resistancePresets[_resistanceIndex];
-                float i = 6f / (r * 2f);
-                valueLabelText.text = $"R={r:F0}\u03a9  I={i:F3}A";
+                float v = 6f; // Fixed voltage source (6V battery)
+                float i = v / (r * 2f); // Two resistors in series
+                valueLabelText.text = $"V={v:F1}V  R={r:F0}Ω  I={i:F3}A";
                 break;
             case "waves_ii":
                 valueLabelText.text = $"A={_amplitudePresets[_amplitudeIndex]*100f:F0}cm";
@@ -269,12 +302,14 @@ public class ARExperienceScreenController : MonoBehaviour
         Debug.Log("[AR UI] Caption set to: " + text);
     }
 
-    string GetTopicName() =>
-        AppState.CurrentTopicID switch
+    string GetTopicName()
+    {
+        return AppState.CurrentTopicID switch
         {
             "current_electricity" => "Current Electricity II",
             "em_induction"        => "Electromagnetic Induction",
             "waves_ii"            => "Waves II",
             _                     => "AR Experience"
         };
+    }
 }

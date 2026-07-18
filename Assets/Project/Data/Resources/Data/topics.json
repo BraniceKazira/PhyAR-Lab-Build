@@ -8,7 +8,8 @@
       "status": "shell",
       "accentColorHex": "#00D9FF",
       "description": "Pulses, transverse & longitudinal waves",
-      "subTopicCount": 4
+      "subTopicCount": 4,
+      "iconName": "icon_waves"
     },
     {
       "id": "electromagnetism",
@@ -18,7 +19,8 @@
       "status": "shell",
       "accentColorHex": "#B87333",
       "description": "Oersted effect, motor effect, Fleming's LHR",
-      "subTopicCount": 4
+      "subTopicCount": 4,
+      "iconName": "icon_electromagnetism"
     },
     {
       "id": "current_electricity",
@@ -28,7 +30,8 @@
       "status": "full",
       "accentColorHex": "#2EC4B6",
       "description": "Ohm's law, series & parallel, EMF",
-      "subTopicCount": 5
+      "subTopicCount": 5,
+      "iconName": "icon_current_electricity"
     },
     {
       "id": "waves_ii",
@@ -38,7 +41,8 @@
       "status": "full",
       "accentColorHex": "#00D9FF",
       "description": "Reflection, refraction, diffraction, interference",
-      "subTopicCount": 5
+      "subTopicCount": 5,
+      "iconName": "icon_waves"
     },
     {
       "id": "em_induction",
@@ -48,7 +52,8 @@
       "status": "full",
       "accentColorHex": "#B87333",
       "description": "Faraday, Lenz, generators, transformers",
-      "subTopicCount": 5
+      "subTopicCount": 5,
+      "iconName": "icon_em_induction"
     }
   ]
 }

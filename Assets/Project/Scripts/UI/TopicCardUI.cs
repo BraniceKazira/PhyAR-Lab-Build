@@ -1,9 +1,5 @@
-// TopicCardUI.cs
-// Attach to: each manually placed card (Card_Waves, Card_Electromagnetism, etc.)
-// OR attach to the TopicCard prefab if you later use instantiation.
-//
-// For manually placed cards: set topicID in the Inspector directly.
-// For instantiated cards: Populate() sets everything from JSON data.
+// TopicCardUI.cs — Updated with icon support (Priority 2.1)
+// Attach to: each topic card prefab/GameObject
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,28 +7,28 @@ using TMPro;
 
 public class TopicCardUI : MonoBehaviour
 {
-    [Header("Set this in Inspector for manually placed cards")]
-    [Tooltip("Must match the id field in topics.json — e.g. em_induction")]
+    [Header("Set topicID in Inspector for manually placed cards")]
     public string topicID;
 
-    [Header("Text fields — leave empty if not built yet")]
+    [Header("Text fields")]
     public TMP_Text topicNameText;
     public TMP_Text formText;
     public TMP_Text descriptionText;
     public TMP_Text statusBadgeText;
 
-    [Header("Visual elements — leave empty if not built yet")]
+    [Header("Icon (Priority 2.1)")]
+    public Image topicIcon;  // drag the Image component for the icon
+
+    [Header("Visual elements")]
     public Image accentBar;
     public Image statusBadgeImage;
     public Image progressFill;
 
-    [Header("Status badge colours")]
-    public Color fullARColor    = new Color(0.180f, 0.769f, 0.710f); // Coil Green
-    public Color comingSoonColor = new Color(0.10f, 0.10f, 0.18f, 0.12f);
+    private readonly Color _fullARColor    = new Color(0.180f, 0.769f, 0.710f);
+    private readonly Color _comingSoonColor= new Color(0.10f, 0.10f, 0.18f, 0.12f);
 
     void Start()
     {
-        // Wire the button automatically so you don't need to set OnClick in Inspector
         Button btn = GetComponent<Button>();
         if (btn != null)
         {
@@ -41,36 +37,38 @@ public class TopicCardUI : MonoBehaviour
         }
     }
 
-    // Called by HomeScreenController for instantiated cards
     public void Populate(TopicEntry entry)
     {
         topicID = entry.id;
 
-        if (topicNameText)   topicNameText.text   = entry.displayName;
-        if (formText)        formText.text         = entry.form;
-        if (descriptionText) descriptionText.text  = entry.description;
+        if (topicNameText   != null) topicNameText.text   = entry.displayName;
+        if (formText        != null) formText.text         = entry.form;
+        if (descriptionText != null) descriptionText.text  = entry.description;
 
+        // Accent bar colour
         if (accentBar != null &&
-            ColorUtility.TryParseHtmlString(entry.accentColorHex, out Color accent))
-            accentBar.color = accent;
+            ColorUtility.TryParseHtmlString(entry.accentColorHex, out Color c))
+            accentBar.color = c;
 
         bool isFull = entry.status == "full";
+        if (statusBadgeText  != null)
+            statusBadgeText.text  = isFull ? "Full AR" : "Coming soon";
+        if (statusBadgeImage != null)
+            statusBadgeImage.color = isFull ? _fullARColor : _comingSoonColor;
 
-        if (statusBadgeText)
-            statusBadgeText.text = isFull ? "Full AR" : "Coming soon";
+        // Priority 2.1 — load icon from Resources/Icons/
+        if (topicIcon != null && !string.IsNullOrEmpty(entry.iconName))
+        {
+            Sprite icon = Resources.Load<Sprite>("Icons/" + entry.iconName);
+            if (icon != null)
+                topicIcon.sprite = icon;
+            else
+                Debug.LogWarning($"[TopicCard] Icon not found: Icons/{entry.iconName}");
+        }
 
-        if (statusBadgeImage)
-            statusBadgeImage.color = isFull ? fullARColor : comingSoonColor;
-
-        if (progressFill != null)
-            progressFill.rectTransform.sizeDelta =
-                new Vector2(0, progressFill.rectTransform.sizeDelta.y);
-
-        // Disable tapping for shell topics
         Button btn = GetComponent<Button>();
         if (btn != null) btn.interactable = isFull;
-
-        if (!isFull && topicNameText)
+        if (!isFull && topicNameText != null)
             topicNameText.color = new Color(0.10f, 0.10f, 0.18f, 0.40f);
     }
 
@@ -78,7 +76,7 @@ public class TopicCardUI : MonoBehaviour
     {
         if (string.IsNullOrEmpty(topicID))
         {
-            Debug.LogWarning("[TopicCardUI] topicID is empty — set it in the Inspector.");
+            Debug.LogWarning("[TopicCard] topicID empty.");
             return;
         }
         UINavigator.Instance.OpenTopic(topicID);

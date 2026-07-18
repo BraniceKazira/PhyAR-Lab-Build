@@ -34,6 +34,7 @@ public class TopicEntry
     public string accentColorHex;  // "#B87333"
     public string description;     // short subtitle shown on card
     public int subTopicCount;
+    public string iconName; 
 }
 
 // ════════════════════════════════════════════════════════════════════

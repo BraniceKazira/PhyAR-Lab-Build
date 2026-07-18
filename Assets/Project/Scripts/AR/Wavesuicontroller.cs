@@ -1,42 +1,92 @@
-// WavesUIController.cs
-// Folder:  Assets/_Project/Scripts/UI/
-// Attach:  WavesControlPanel inside Screen_ARExperience
+// WaveLabels.cs — Priority 2.3
+// Attach to: WavesPrefab root
+// Adds floating labels anchored to specific points on the wave.
 
 using UnityEngine;
 using TMPro;
 
-public class WavesUIController : MonoBehaviour
+public class WaveUIcontroller: MonoBehaviour
 {
-    public TMP_Text amplitudeLabel;
-    public TMP_Text frequencyLabel;
-    public TMP_Text wavelengthLabel;
+    [Header("Drag the WaveGenerator from the same GameObject")]
+    public WaveGenerator waveGenerator;
 
-    WaveGenerator _wave;
-    WaveGenerator Wave()
+    [Header("Label positions (set in Inspector or auto-calculated)")]
+    public Transform amplitudeLabel;   // floats at wave crest
+    public Transform troughLabel;      // floats at wave trough
+    public Transform wavelengthLabel;  // floats between two crests
+    public Transform crestLabel;       // marks the highest point
+
+    [Header("Label TMP texts")]
+    public TMP_Text amplitudeText;
+    public TMP_Text troughText;
+    public TMP_Text wavelengthText;
+    public TMP_Text crestText;
+
+    private LineRenderer _line;
+    private bool         _labelsVisible = true;
+
+    void Start()
     {
-        if (_wave == null) _wave = FindObjectOfType<WaveGenerator>();
-        return _wave;
+        _line = GetComponent<LineRenderer>();
+        if (_line == null && waveGenerator != null)
+            _line = waveGenerator.GetComponent<LineRenderer>();
     }
 
-    void OnEnable() { _wave = FindObjectOfType<WaveGenerator>(); }
-
-    public void OnAmplitudeChanged(float a)
+    void LateUpdate()
     {
-        Wave()?.SetAmplitude(a);
-        if (amplitudeLabel  != null) amplitudeLabel.text  = $"{a * 100f:F1} cm";
+        if (!_labelsVisible || _line == null || _line.positionCount < 2) return;
+
+        // Find crest (highest Y) and trough (lowest Y) positions on the wave
+        Vector3 crestPos  = _line.GetPosition(0);
+        Vector3 troughPos = _line.GetPosition(0);
+
+        for (int i = 1; i < _line.positionCount; i++)
+        {
+            Vector3 p = _line.GetPosition(i);
+            if (p.y > crestPos.y)  crestPos  = p;
+            if (p.y < troughPos.y) troughPos = p;
+        }
+
+        // Convert from local to world space
+        crestPos  = transform.TransformPoint(crestPos);
+        troughPos = transform.TransformPoint(troughPos);
+
+        // Position labels
+        if (amplitudeLabel != null)
+        {
+            amplitudeLabel.position = crestPos + Vector3.up * 0.02f;
+            if (amplitudeText != null && waveGenerator != null)
+                amplitudeText.text = $"Amplitude\n{waveGenerator.amplitude * 100f:F1} cm";
+        }
+
+        if (crestLabel != null)
+        {
+            crestLabel.position = crestPos;
+            if (crestText != null) crestText.text = "Crest";
+        }
+
+        if (troughLabel != null)
+        {
+            troughLabel.position = troughPos;
+            if (troughText != null) troughText.text = "Trough";
+        }
+
+        if (wavelengthLabel != null && waveGenerator != null)
+        {
+            // Place wavelength label at mid-point of wave
+            Vector3 mid = transform.TransformPoint(_line.GetPosition(_line.positionCount / 2));
+            wavelengthLabel.position = mid + Vector3.up * 0.04f;
+            if (wavelengthText != null)
+                wavelengthText.text = $"\u03bb = {waveGenerator.wavelength * 100f:F1} cm";
+        }
     }
 
-    public void OnFrequencyChanged(float f)
+    public void ToggleLabels(bool show)
     {
-        Wave()?.SetFrequency(f);
-        if (frequencyLabel  != null) frequencyLabel.text  = $"{f:F1} Hz";
+        _labelsVisible = show;
+        if (amplitudeLabel  != null) amplitudeLabel.gameObject.SetActive(show);
+        if (troughLabel     != null) troughLabel.gameObject.SetActive(show);
+        if (wavelengthLabel != null) wavelengthLabel.gameObject.SetActive(show);
+        if (crestLabel      != null) crestLabel.gameObject.SetActive(show);
     }
-
-    public void OnWavelengthChanged(float w)
-    {
-        Wave()?.SetWavelength(w);
-        if (wavelengthLabel != null) wavelengthLabel.text = $"{w * 100f:F1} cm";
-    }
-
-    public void OnToggleWaveType() => Wave()?.ToggleWaveType();
 }

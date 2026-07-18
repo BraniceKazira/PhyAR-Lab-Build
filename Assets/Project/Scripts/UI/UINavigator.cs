@@ -1,3 +1,5 @@
+// UINavigator.cs — Final version with guaranteed overlap fix
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -8,21 +10,17 @@ public class UINavigator : MonoBehaviour
     [System.Serializable]
     public class ScreenEntry
     {
-        public string screenName;
+        public string     screenName;
         public GameObject panel;
     }
 
-    [Header("Register all screen panels here")]
     public ScreenEntry[] screens;
-
-    [Header("Screen name to show on startup")]
-    public string initialScreen = "Screen_Splash";
+    public string        initialScreen = "Screen_Splash";
 
     private Dictionary<string, GameObject> _map;
-    private string _current = "";
+    private string _current  = "";
     private string _previous = "";
 
-    // ── Constants ──
     public const string SCREEN_SPLASH       = "Screen_Splash";
     public const string SCREEN_HOME         = "Screen_Home";
     public const string SCREEN_LEARN        = "Screen_Learn";
@@ -36,71 +34,66 @@ public class UINavigator : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
         _map = new Dictionary<string, GameObject>();
-        foreach (var entry in screens)
-        {
-            if (entry.panel != null)
-                _map[entry.screenName] = entry.panel;
+        foreach (var e in screens)
+            if (e.panel != null)
+                _map[e.screenName] = e.panel;
             else
-                Debug.LogWarning($"[UINavigator] '{entry.screenName}' has no panel assigned.");
-        }
+                Debug.LogWarning($"[Nav] '{e.screenName}' has no panel.");
 
-        // Hide ALL panels first
-        foreach (var panel in _map.Values)
-        {
-            if (panel != null)
-                panel.SetActive(false);
-        }
+        // Hide every panel unconditionally at start
+        foreach (var p in _map.Values) p.SetActive(false);
 
         ShowScreen(initialScreen);
     }
 
-    // ── Core navigation method ──
     public void ShowScreen(string name)
     {
         if (string.IsNullOrEmpty(name))
         {
-            Debug.LogWarning("[UINavigator] ShowScreen called with empty name.");
+            Debug.LogWarning("[Nav] ShowScreen called with empty name.");
             return;
         }
-
         if (!_map.ContainsKey(name))
         {
-            Debug.LogError($"[UINavigator] Screen '{name}' not found. Available: {string.Join(", ", _map.Keys)}");
+            Debug.LogError($"[Nav] '{name}' not found. Available: {string.Join(", ", _map.Keys)}");
             return;
         }
 
-        // ✅ CRITICAL FIX: Hide ALL screens first
-        foreach (var panel in _map.Values)
-        {
-            if (panel != null)
-                panel.SetActive(false);
-        }
+        // ── OVERLAP FIX: hide ALL panels before showing the new one ──
+        foreach (var kvp in _map)
+            kvp.Value.SetActive(false);
 
-        // Then show the target
-        _previous = _current;
+        // Store the previous screen for GoBack, but ONLY if we're not going to Progress.
+        // If we're going to Progress, we want to prevent GoBack from returning to Quiz Results.
+        if (name != SCREEN_PROGRESS)
+            _previous = _current;
+
         _current = name;
         _map[name].SetActive(true);
 
-        Debug.Log($"[UINavigator] → {name}");
+        Debug.Log("[Nav] → " + name);
     }
 
-    // ── Convenience methods ──
     public void OpenTopic(string topicID)
     {
         AppState.CurrentTopicID = topicID;
+        Debug.Log("[Nav] Topic = " + topicID);
         ShowScreen(SCREEN_LEARN);
     }
 
     public void GoBack()
     {
+        // ── OVERLAP FIX: if we're on Progress, go to Home, not back to Quiz Results ──
+        if (_current == SCREEN_PROGRESS)
+        {
+            ShowScreen(SCREEN_HOME);
+            return;
+        }
+
         if (!string.IsNullOrEmpty(_previous))
             ShowScreen(_previous);
         else

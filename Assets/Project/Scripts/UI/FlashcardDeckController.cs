@@ -25,17 +25,10 @@ public class FlashcardDeckController : MonoBehaviour
     public Button stillLearningButton;
     public Button skipButton;
 
-    [Header("Counter")]
+    [Header("Counter - Icon based ()")]
     public TMP_Text knownCountText;
     public TMP_Text stillLearningCountText;
     public TMP_Text skippedCountText;
-
-    [Header("Sub-topic pills")]
-    public SubTopicPillController subTopicPills;
-
-    [Header("Continue")]
-    public Button continueButton;
-    public TMP_Text continueButtonText;
 
     void OnEnable()
     {
@@ -66,11 +59,6 @@ public class FlashcardDeckController : MonoBehaviour
             skipButton.onClick.RemoveAllListeners();
             skipButton.onClick.AddListener(OnSkipClicked);
         }
-        if (continueButton != null)
-        {
-            continueButton.onClick.RemoveAllListeners();
-            continueButton.onClick.AddListener(OnContinueClicked);
-        }
 
         RefreshUI();
     }
@@ -88,6 +76,7 @@ public class FlashcardDeckController : MonoBehaviour
             TopicID = AppState.CurrentTopicID,
             DeckData = deck
         };
+        Debug.Log($"[FC] Session started: {AppState.CurrentTopicID} | {AppState.ActiveFlashcardSession.TotalCards} cards");
     }
 
     void RefreshUI()
@@ -95,26 +84,41 @@ public class FlashcardDeckController : MonoBehaviour
         FlashcardSession s = AppState.ActiveFlashcardSession;
         if (s == null) return;
 
+        // Nav title
         if (navTitleText != null)
-            navTitleText.text = "Flashcards · " + s.CurrentSubTopic.fullName;
+        {
+            string displayName = AppState.CurrentTopicID;
+            TopicListWrapper topics = ModuleLoader.Instance.LoadTopicList();
+            if (topics != null)
+            {
+                TopicEntry entry = topics.topics.Find(t => t.id == AppState.CurrentTopicID);
+                if (entry != null) displayName = entry.displayName;
+            }
+            navTitleText.text = "Flashcards · " + displayName;
+        }
 
+        // Step pills
         if (stepPills != null) stepPills.SetActiveStep(2);
 
+        // Progress bar and counter
         int total = s.TotalCards;
-        int done = s.CompletedCards;
+        int done = s.CurrentCardIndex;
         if (progressCaptionText != null)
-            progressCaptionText.text = $"Card {done + 1} of {total}";
+            progressCaptionText.text = $"{done + 1} of {total}";
         if (progressFillRect != null && total > 0)
             progressFillRect.sizeDelta = new Vector2(
                 progressTrackWidth * ((float)done / total),
                 progressFillRect.sizeDelta.y);
 
+        // Card text
         if (cardText != null)
             cardText.text = s.IsShowingAnswer ? s.CurrentCard.answer : s.CurrentCard.question;
 
+        // Flip hint
         if (flipHintText != null)
             flipHintText.gameObject.SetActive(!s.IsShowingAnswer);
 
+        // Answer buttons
         if (gotItButton != null)
             gotItButton.interactable = s.IsShowingAnswer;
         if (stillLearningButton != null)
@@ -122,50 +126,16 @@ public class FlashcardDeckController : MonoBehaviour
         if (skipButton != null)
             skipButton.interactable = true;
 
-        // COUNTERS - FIXED
+        // Icon counters (compact)
         if (knownCountText != null)
-            knownCountText.text = s.KnownCardIDs.Count + " known";
+            knownCountText.text = $" {s.KnownCardIDs.Count}";
         if (stillLearningCountText != null)
-            stillLearningCountText.text = s.StillLearningCardIDs.Count + " still learning";
+            stillLearningCountText.text = $"{s.StillLearningCardIDs.Count}";
         if (skippedCountText != null)
-        {
-            skippedCountText.text = s.SkippedCardIDs.Count + " skipped";
-            skippedCountText.gameObject.SetActive(true);
-        }
-
-        if (subTopicPills != null)
-        {
-            var entries = new SubTopicEntry[s.DeckData.subTopics.Count];
-            for (int i = 0; i < s.DeckData.subTopics.Count; i++)
-                entries[i] = new SubTopicEntry
-                {
-                    id = s.DeckData.subTopics[i].id,
-                    shortName = s.DeckData.subTopics[i].shortName
-                };
-            subTopicPills.SetSubTopics(entries);
-            subTopicPills.SetActiveByIndex(s.CurrentSubTopicIndex);
-        }
-
-        bool done2 = CheckSubTopicDone(s);
-        if (continueButton != null)
-        {
-            continueButton.gameObject.SetActive(done2);
-            if (done2 && continueButtonText != null)
-                continueButtonText.text = s.HasNextCard() ? "Continue to next sub-topic" : "See your results";
-        }
+            skippedCountText.text = $" {s.SkippedCardIDs.Count}";
     }
 
-    bool CheckSubTopicDone(FlashcardSession s)
-    {
-        foreach (var card in s.CurrentSubTopic.cards)
-        {
-            if (!s.KnownCardIDs.Contains(card.id) &&
-                !s.StillLearningCardIDs.Contains(card.id) &&
-                !s.SkippedCardIDs.Contains(card.id))
-                return false;
-        }
-        return true;
-    }
+    // ── Button Callbacks ──────────────────────────────────────────────
 
     public void OnCardFlipped()
     {
@@ -180,7 +150,12 @@ public class FlashcardDeckController : MonoBehaviour
         var s = AppState.ActiveFlashcardSession;
         if (s == null || !s.IsShowingAnswer) return;
         string id = s.CurrentCard.id;
+
+        // Move to Known, remove from other lists
         if (!s.KnownCardIDs.Contains(id)) s.KnownCardIDs.Add(id);
+        if (s.StillLearningCardIDs.Contains(id)) s.StillLearningCardIDs.Remove(id);
+        if (s.SkippedCardIDs.Contains(id)) s.SkippedCardIDs.Remove(id);
+
         Advance(s);
     }
 
@@ -189,7 +164,12 @@ public class FlashcardDeckController : MonoBehaviour
         var s = AppState.ActiveFlashcardSession;
         if (s == null || !s.IsShowingAnswer) return;
         string id = s.CurrentCard.id;
+
+        // Move to StillLearning, remove from other lists
         if (!s.StillLearningCardIDs.Contains(id)) s.StillLearningCardIDs.Add(id);
+        if (s.KnownCardIDs.Contains(id)) s.KnownCardIDs.Remove(id);
+        if (s.SkippedCardIDs.Contains(id)) s.SkippedCardIDs.Remove(id);
+
         Advance(s);
     }
 
@@ -198,34 +178,26 @@ public class FlashcardDeckController : MonoBehaviour
         var s = AppState.ActiveFlashcardSession;
         if (s == null) return;
         string id = s.CurrentCard.id;
-        if (!s.SkippedCardIDs.Contains(id) &&
-            !s.KnownCardIDs.Contains(id) &&
-            !s.StillLearningCardIDs.Contains(id))
-            s.SkippedCardIDs.Add(id);
-        Advance(s);
-    }
 
-    public void OnContinueClicked()
-    {
-        var s = AppState.ActiveFlashcardSession;
-        if (s == null) return;
-        if (s.HasNextCard())
-        {
-            s.AdvanceCard();
-            RefreshUI();
-        }
-        else
-        {
-            UINavigator.Instance.ShowScreen(UINavigator.SCREEN_FC_SUMMARY);
-        }
+        // Move to Skipped, remove from other lists
+        if (!s.SkippedCardIDs.Contains(id)) s.SkippedCardIDs.Add(id);
+        if (s.KnownCardIDs.Contains(id)) s.KnownCardIDs.Remove(id);
+        if (s.StillLearningCardIDs.Contains(id)) s.StillLearningCardIDs.Remove(id);
+
+        Advance(s);
     }
 
     void Advance(FlashcardSession s)
     {
         bool more = s.AdvanceCard();
         if (!more)
+        {
+            Debug.Log("[FC] All cards complete → Summary");
             UINavigator.Instance.ShowScreen(UINavigator.SCREEN_FC_SUMMARY);
+        }
         else
+        {
             RefreshUI();
+        }
     }
 }
