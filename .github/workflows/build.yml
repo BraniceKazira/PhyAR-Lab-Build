@@ -11,14 +11,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Build
-      uses: game-ci/unity-builder@v4
+    - name: Activate Unity
+      uses: game-ci/unity-activate@v3
+      with:
+        unityVersion: 2022.3.17f1
+        allowDirtyBuild: true
+
+    - name: Build Android APK
+      uses: game-ci/unity-builder@v3
       with:
         targetPlatform: Android
         allowDirtyBuild: true
+        unityVersion: 2022.3.17f1
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: APK
+        name: PhyAR-Lab-APK
         path: build/Android/*.apk
