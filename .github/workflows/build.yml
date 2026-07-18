@@ -18,6 +18,7 @@ jobs:
       with:
         targetPlatform: Android
         allowDirtyBuild: true
+        buildMethod: BuildScript.BuildAndroid
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
